@@ -43,11 +43,11 @@ export const AudioPlayerTrackInfo: React.FC<AudioPlayerTrackInfoProps> = ({
       )}
 
       <div className="flex flex-col justify-center">
-        <p className="mb-1 leading-snug font-medium text-sm text-slate-50">
+        <p className="mb-1 leading-snug font-medium text-sm text-slate-50 text-ellipsis overflow-hidden whitespace-nowrap max-w-[33ch]">
           {title}
         </p>
 
-        <p className="leading-snug font-normal text-xs text-slate-100">
+        <p className="leading-snug font-normal text-xs text-slate-100 text-ellipsis overflow-hidden whitespace-nowrap max-w-[66ch]">
           {artist}
         </p>
 
