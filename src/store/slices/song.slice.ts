@@ -6,25 +6,55 @@ export type SongSlice = {
   currentSong: APISong | null;
   isSongLoading: boolean;
   songLoadingProgression: SongProgression | null;
-  loadSong: (song: APISong) => void;
+  loadSong: (
+    song: APISong,
+    initiator: "library-browser" | "queue" | "history"
+  ) => void;
   loadSongSuccess: () => void;
   loadSongFailed: () => void;
   loadSongProgression: (progression: SongProgression) => void;
 };
 
-export const createSongSlice: StoreSlice<SongSlice> = (set) => ({
+export const createSongSlice: StoreSlice<SongSlice> = (set, get) => ({
   currentSong: null,
   isSongLoading: false,
   songLoadingProgression: null,
-  loadSong: (song) => set(() => ({ currentSong: song, isSongLoading: true })),
+
+  loadSong: (song, initiator) => {
+    const { currentSong, history } = get();
+
+    // Push songs to the history only if they are not played from the "back" button.
+    if (currentSong && initiator !== "history") {
+      set(() => ({ history: [currentSong, ...history] }));
+    }
+
+    // If playing from the "next" button or auto-play queue, remove the first song
+    // from the queue.
+    if (initiator === "queue") {
+      set(() => ({ queue: [...get().queue].slice(1) }));
+    }
+
+    // if playing from the "back" button, remove the last song from the history.
+    if (initiator === "history") {
+      set(() => ({ history: [...history].slice(1) }));
+    }
+
+    return set(() => ({
+      isSongLoading: true,
+      currentSong: song,
+    }));
+  },
+
   loadSongSuccess: () =>
     set(() => ({ isSongLoading: false, songLoadingProgression: null })),
+
   loadSongFailed: () =>
     set(() => ({
       currentSong: null,
       isSongLoading: false,
       songLoadingProgression: null,
     })),
+
   loadSongProgression: (songProgression) =>
     set(() => ({ songLoadingProgression: { ...songProgression } })),
 });

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import shallow from "zustand/shallow";
 import { captureException } from "@sentry/react";
 
+import type { APISong } from "@/interfaces/api.interfaces";
 import { useStore } from "@/store/store";
 import { getSongCover } from "@/api";
 import { audioManager } from "@/lib/AudioManager";
@@ -16,7 +17,7 @@ export const AudioPlayer: React.FC = () => {
   const {
     token,
     queue,
-    updateQueue,
+    history,
     currentSong,
     isSongLoading,
     loadSong,
@@ -28,7 +29,7 @@ export const AudioPlayer: React.FC = () => {
     (state) => ({
       token: state.token,
       queue: state.queue,
-      updateQueue: state.updateQueue,
+      history: state.history,
       currentSong: state.currentSong,
       isSongLoading: state.isSongLoading,
       loadSong: state.loadSong,
@@ -42,6 +43,25 @@ export const AudioPlayer: React.FC = () => {
 
   const [image, setImage] = useState<string>("");
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
+
+  const playSong = (
+    song: APISong,
+    initiator: "library-browser" | "queue" | "history"
+  ) => {
+    loadSong(song, initiator);
+    audioManager.clean();
+
+    audioManager
+      .loadSong(song, token!)
+      .then(() => {
+        loadSongSuccess();
+      })
+      .catch((err) => {
+        loadSongFailed();
+        audioManager.clean();
+        captureException(err);
+      });
+  };
 
   const handleUpdatedAudioContext = (event: CustomEvent) => {
     console.log(
@@ -64,6 +84,16 @@ export const AudioPlayer: React.FC = () => {
     });
   };
 
+  const handlePlayPreviousSong = () => {
+    const previousSong = history[0];
+
+    if (!token || isSongLoading) {
+      return;
+    }
+
+    playSong(previousSong, "history");
+  };
+
   const handlePlayNextSong = () => {
     const nextSong = queue[0];
 
@@ -71,20 +101,7 @@ export const AudioPlayer: React.FC = () => {
       return;
     }
 
-    updateQueue([...queue].slice(1));
-    loadSong(nextSong);
-    audioManager.clean();
-
-    audioManager
-      .loadSong(nextSong, token)
-      .then(() => {
-        loadSongSuccess();
-      })
-      .catch((err) => {
-        loadSongFailed();
-        audioManager.clean();
-        captureException(err);
-      });
+    playSong(nextSong, "queue");
   };
 
   useEffect(() => {
@@ -152,6 +169,9 @@ export const AudioPlayer: React.FC = () => {
           audioContext={audioContext}
           currentSong={currentSong}
           isSongLoading={isSongLoading}
+          hasPreviousSong={history.length > 0}
+          hasNextSong={queue.length > 0}
+          handlePlayPreviousSong={handlePlayPreviousSong}
           handlePlayNextSong={handlePlayNextSong}
         />
 

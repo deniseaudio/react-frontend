@@ -10,15 +10,21 @@ const cx = (classes: string[]) => classes.join(" ");
 
 export type AudioPlayerControlsProps = {
   isSongLoading: boolean;
+  hasPreviousSong: boolean;
+  hasNextSong: boolean;
   currentSong: APISong | null;
   audioContext: AudioContext | null;
+  handlePlayPreviousSong: () => void;
   handlePlayNextSong: () => void;
 };
 
 export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({
   isSongLoading,
+  hasPreviousSong,
+  hasNextSong,
   currentSong,
   audioContext,
+  handlePlayPreviousSong,
   handlePlayNextSong,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -45,8 +51,14 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({
     <div className="flex flex-1 justify-center items-center">
       <button
         type="button"
-        className="w-12 h-12 flex items-center justify-center text-slate-300 hover:text-slate-50 transition-colors duration-100"
-        disabled
+        className={cx([
+          "w-12 h-12 flex items-center justify-center text-slate-300 hover:text-slate-50 transition-colors duration-100",
+          isSongLoading || !hasPreviousSong
+            ? "text-opacity-50 cursor-not-allowed"
+            : " text-opacity-100 cursor-pointer",
+        ])}
+        onClick={handlePlayPreviousSong}
+        disabled={isSongLoading || !hasPreviousSong}
       >
         <PlayPreviousIcon />
       </button>
@@ -71,8 +83,14 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({
 
       <button
         type="button"
-        className="w-12 h-12 flex items-center justify-center text-slate-300 hover:text-slate-50 transition-colors duration-100"
+        className={cx([
+          "w-12 h-12 flex items-center justify-center text-slate-300 hover:text-slate-50 transition-colors duration-100",
+          isSongLoading || !hasNextSong
+            ? "text-opacity-50 cursor-not-allowed"
+            : " text-opacity-100 cursor-pointer",
+        ])}
         onClick={handlePlayNextSong}
+        disabled={isSongLoading || !hasNextSong}
       >
         <PlayNextIcon />
       </button>

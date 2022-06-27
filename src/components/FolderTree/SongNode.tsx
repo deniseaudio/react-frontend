@@ -57,7 +57,7 @@ export const SongNode: React.FC<SongNodeProps> = ({ song, directorySongs }) => {
       return;
     }
 
-    loadSong(song);
+    loadSong(song, "library-browser");
     addSongsToQueue(song.id);
     audioManager.clean();
 
