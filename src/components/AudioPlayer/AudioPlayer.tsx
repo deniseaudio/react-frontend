@@ -64,7 +64,7 @@ export const AudioPlayer: React.FC = () => {
     });
   };
 
-  const handleSongEnded = () => {
+  const handlePlayNextSong = () => {
     const nextSong = queue[0];
 
     if (!token || isSongLoading || currentSong?.id === nextSong.id) {
@@ -121,7 +121,7 @@ export const AudioPlayer: React.FC = () => {
       handleSongLoadingProgression as EventListener
     );
 
-    audioManager.on("song-ended", handleSongEnded as EventListener);
+    audioManager.on("song-ended", handlePlayNextSong as EventListener);
 
     return () => {
       audioManager.off(
@@ -134,7 +134,7 @@ export const AudioPlayer: React.FC = () => {
         handleSongLoadingProgression as EventListener
       );
 
-      audioManager.off("song-ended", handleSongEnded as EventListener);
+      audioManager.off("song-ended", handlePlayNextSong as EventListener);
     };
   }, [token, queue, currentSong, isSongLoading]);
 
@@ -152,6 +152,7 @@ export const AudioPlayer: React.FC = () => {
           audioContext={audioContext}
           currentSong={currentSong}
           isSongLoading={isSongLoading}
+          handlePlayNextSong={handlePlayNextSong}
         />
 
         <AudioPlayerProgressBar isSongLoading={isSongLoading} />
