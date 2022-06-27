@@ -22,6 +22,7 @@ export const AudioPlayer: React.FC = () => {
     loadSong,
     loadSongSuccess,
     loadSongFailed,
+    loadSongProgression,
     songLoadingProgression,
   } = useStore(
     (state) => ({
@@ -33,6 +34,7 @@ export const AudioPlayer: React.FC = () => {
       loadSong: state.loadSong,
       loadSongSuccess: state.loadSongSuccess,
       loadSongFailed: state.loadSongFailed,
+      loadSongProgression: state.loadSongProgression,
       songLoadingProgression: state.songLoadingProgression,
     }),
     shallow
@@ -48,6 +50,18 @@ export const AudioPlayer: React.FC = () => {
     );
 
     setAudioContext(event.detail as AudioContext | null);
+  };
+
+  const handleSongLoadingProgression = (event: CustomEvent) => {
+    const songProgression = event.detail as {
+      contentLength: number;
+      receivedLength: number;
+    };
+
+    loadSongProgression({
+      currentLength: songProgression.receivedLength,
+      totalLength: songProgression.contentLength,
+    });
   };
 
   const handleSongEnded = () => {
@@ -102,12 +116,22 @@ export const AudioPlayer: React.FC = () => {
       handleUpdatedAudioContext as EventListener
     );
 
+    audioManager.on(
+      "updated-song-loading-progression",
+      handleSongLoadingProgression as EventListener
+    );
+
     audioManager.on("song-ended", handleSongEnded as EventListener);
 
     return () => {
       audioManager.off(
         "updated-audio-context",
         handleUpdatedAudioContext as EventListener
+      );
+
+      audioManager.off(
+        "updated-song-loading-progression",
+        handleSongLoadingProgression as EventListener
       );
 
       audioManager.off("song-ended", handleSongEnded as EventListener);

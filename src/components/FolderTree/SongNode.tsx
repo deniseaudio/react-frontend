@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import shallow from "zustand/shallow";
 import { captureException } from "@sentry/react";
 import { MusicNoteIcon } from "@heroicons/react/solid";
@@ -22,7 +22,6 @@ export const SongNode: React.FC<SongNodeProps> = ({ song, directorySongs }) => {
     loadSong,
     loadSongSuccess,
     loadSongFailed,
-    loadSongProgression,
   } = useStore(
     (state) => ({
       token: state.token,
@@ -33,7 +32,6 @@ export const SongNode: React.FC<SongNodeProps> = ({ song, directorySongs }) => {
       loadSong: state.loadSong,
       loadSongSuccess: state.loadSongSuccess,
       loadSongFailed: state.loadSongFailed,
-      loadSongProgression: state.loadSongProgression,
     }),
     shallow
   );
@@ -74,31 +72,6 @@ export const SongNode: React.FC<SongNodeProps> = ({ song, directorySongs }) => {
         captureException(err);
       });
   };
-
-  const handleSongLoadingProgression = (event: CustomEvent) => {
-    const songProgression = event.detail as {
-      contentLength: number;
-      receivedLength: number;
-    };
-
-    loadSongProgression({
-      currentLength: songProgression.receivedLength,
-      totalLength: songProgression.contentLength,
-    });
-  };
-
-  useEffect(() => {
-    audioManager.on(
-      "updated-song-loading-progression",
-      handleSongLoadingProgression as EventListener
-    );
-
-    return () =>
-      audioManager.off(
-        "updated-song-loading-progression",
-        handleSongLoadingProgression as EventListener
-      );
-  });
 
   return (
     <button
