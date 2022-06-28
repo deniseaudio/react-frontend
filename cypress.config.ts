@@ -8,5 +8,7 @@ export default defineConfig({
     },
   },
 
-  e2e: {},
+  e2e: {
+    baseUrl: "http://localhost:4173",
+  },
 });
