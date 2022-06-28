@@ -1,2 +1,8 @@
 dist
 node_modules
+package-lock.json
+package.json
+index.html
+tsconfig.eslint.json
+tsconfig.json
+tsconfig.node.json
