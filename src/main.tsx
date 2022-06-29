@@ -10,6 +10,7 @@ import "./assets/styles/index.css";
 
 if (
   import.meta.env.PROD &&
+  import.meta.env.MODE === "production" &&
   typeof import.meta.env.VITE_SENTRY_DSN === "string"
 ) {
   Sentry.init({
