@@ -8,7 +8,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix --ignore-path .gitignore",
     "preview": "vite preview",
-    "test:cypress-preview": "vite build && npm run preview",
+    "test:cypress-preview": "vite build --mode cypress && npm run preview",
     "test:e2e": "start-server-and-test test:cypress-preview http://127.0.0.1:4173/ 'cypress open --e2e'",
     "test:e2e:ci": "start-server-and-test test:cypress-preview http://127.0.0.1:4173/ 'cypress run --e2e'",
     "typecheck": "tsc --noEmit"
