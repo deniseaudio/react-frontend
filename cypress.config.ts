@@ -9,6 +9,6 @@ export default defineConfig({
   },
 
   e2e: {
-    baseUrl: "http://localhost:4173",
+    baseUrl: "http://localhost:3001",
   },
 });
