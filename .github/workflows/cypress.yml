@@ -25,5 +25,10 @@ jobs:
           wait-on: 'http://localhost:3001'
           # Custom command to start Cypress tests
           command: npm run test:e2e:ci
-          # Disable Cypress video recording
-          record: false
+          # Records the run for Cypress Dashboard
+          record: true
+        env:
+          # Pass GitHub token generated automatically by the action itself
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Pass Cypress Dashboard record key generated automatically by the action itself
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
