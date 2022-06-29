@@ -47,8 +47,8 @@ export const LoginView: React.FC = () => {
   };
 
   return (
-    <div className="max-w-[768px] w-full mx-auto px-8 py-12">
-      <h1 className="mb-6 text-3xl text-slate-50 text-center font-medium">
+    <div className="mx-auto w-full max-w-[768px] px-8 py-12">
+      <h1 className="mb-6 text-center text-3xl font-medium text-slate-50">
         Synology Audio Server
       </h1>
 
@@ -59,40 +59,40 @@ export const LoginView: React.FC = () => {
       </p>
 
       <form
-        className="flex flex-col max-w-[350px] mx-auto px-8 py-8 rounded-md bg-gray-600"
+        className="mx-auto flex max-w-[350px] flex-col rounded-md bg-gray-600 px-8 py-8"
         onSubmit={onSubmit}
       >
-        <label htmlFor="email" className="flex flex-col mb-4">
-          <span className="text-slate-50 text-sm font-medium">Email</span>
+        <label htmlFor="email" className="mb-4 flex flex-col">
+          <span className="text-sm font-medium text-slate-50">Email</span>
 
           <input
             id="email"
             type="email"
-            className="block w-full px-4 py-2 mt-1 rounded-sm font-medium text-sm text-slate-900"
+            className="mt-1 block w-full rounded-sm px-4 py-2 text-sm font-medium text-slate-900"
             required
           />
         </label>
 
-        <label htmlFor="password" className="flex flex-col mb-4">
-          <span className="text-slate-50 text-sm font-medium">Password</span>
+        <label htmlFor="password" className="mb-4 flex flex-col">
+          <span className="text-sm font-medium text-slate-50">Password</span>
 
           <input
             id="password"
             type="password"
-            className="block w-full px-4 py-2 mt-1 rounded-sm font-medium text-sm text-slate-900"
+            className="mt-1 block w-full rounded-sm px-4 py-2 text-sm font-medium text-slate-900"
             required
           />
         </label>
 
         {error ? (
-          <p className="mb-4 text-sm text-center text-red-300 font-medium">
+          <p className="mb-4 text-center text-sm font-medium text-red-300">
             {error}
           </p>
         ) : null}
 
         <button
           type="submit"
-          className="block w-full py-2 rounded-sm text-base text-slate-50 font-medium bg-indigo-500"
+          className="block w-full rounded-sm bg-indigo-500 py-2 text-base font-medium text-slate-50"
         >
           {isLoading ? "Loading..." : "Login"}
         </button>

@@ -14,8 +14,8 @@ export const AudioPlayerVolume: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-end items-center text-slate-300">
-      <VolumeUpIcon className="w-5 h-5 mr-4" />
+    <div className="flex items-center justify-end text-slate-300">
+      <VolumeUpIcon className="mr-4 h-5 w-5" />
 
       <ReactInputSlider
         axis="x"

@@ -48,14 +48,14 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({
   }, [audioContext]);
 
   return (
-    <div className="flex flex-1 justify-center items-center">
+    <div className="flex flex-1 items-center justify-center">
       <button
         type="button"
         className={cx([
-          "w-12 h-12 flex items-center justify-center text-slate-300 hover:text-slate-50 transition-colors duration-100",
+          "flex h-12 w-12 items-center justify-center text-slate-300 transition-colors duration-100 hover:text-slate-50",
           isSongLoading || !hasPreviousSong
-            ? "text-opacity-50 cursor-not-allowed"
-            : " text-opacity-100 cursor-pointer",
+            ? "cursor-not-allowed text-opacity-50"
+            : " cursor-pointer text-opacity-100",
         ])}
         onClick={handlePlayPreviousSong}
         disabled={isSongLoading || !hasPreviousSong}
@@ -66,28 +66,28 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({
       <button
         type="button"
         className={cx([
-          "flex items-center justify-center w-12 h-12 focus:outline-none hover:scale-110 transition-transform duration-100 text-slate-50",
+          "flex h-12 w-12 items-center justify-center text-slate-50 transition-transform duration-100 hover:scale-110 focus:outline-none",
           isSongLoading
-            ? "text-opacity-50 cursor-not-allowed"
-            : "text-opacity-100 cursor-pointer",
+            ? "cursor-not-allowed text-opacity-50"
+            : "cursor-pointer text-opacity-100",
         ])}
         onClick={() => handleResumePause()}
         disabled={isSongLoading}
       >
         {isPlaying ? (
-          <PauseIcon className="w-full h-auto" />
+          <PauseIcon className="h-auto w-full" />
         ) : (
-          <PlayIcon className="w-full h-auto" />
+          <PlayIcon className="h-auto w-full" />
         )}
       </button>
 
       <button
         type="button"
         className={cx([
-          "w-12 h-12 flex items-center justify-center text-slate-300 hover:text-slate-50 transition-colors duration-100",
+          "flex h-12 w-12 items-center justify-center text-slate-300 transition-colors duration-100 hover:text-slate-50",
           isSongLoading || !hasNextSong
-            ? "text-opacity-50 cursor-not-allowed"
-            : " text-opacity-100 cursor-pointer",
+            ? "cursor-not-allowed text-opacity-50"
+            : " cursor-pointer text-opacity-100",
         ])}
         onClick={handlePlayNextSong}
         disabled={isSongLoading || !hasNextSong}

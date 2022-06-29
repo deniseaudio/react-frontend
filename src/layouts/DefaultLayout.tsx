@@ -15,7 +15,7 @@ export const DefaultLayout: React.FC = () => {
     <>
       <Navbar />
 
-      <main className="max-w-[1024px] mx-auto pb-24">
+      <main className="mx-auto max-w-[1024px] pb-24">
         <div className="p-8">
           <Outlet />
         </div>

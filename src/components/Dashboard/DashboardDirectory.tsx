@@ -36,8 +36,8 @@ export const DashboardDirectory: React.FC<DashboardDirectoryProps> = ({
   }, [token]);
 
   return (
-    <div className="max-h-[600px] overflow-y-auto px-8 py-4 rounded-md bg-gray-600">
-      <h3 className="mb-3 text-2xl text-slate-50 font-medium leading-tight">
+    <div className="max-h-[600px] overflow-y-auto rounded-md bg-gray-600 px-8 py-4">
+      <h3 className="mb-3 text-2xl font-medium leading-tight text-slate-50">
         Library browser
       </h3>
 

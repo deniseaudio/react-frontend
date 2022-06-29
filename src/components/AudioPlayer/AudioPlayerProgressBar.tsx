@@ -86,7 +86,7 @@ export const AudioPlayerProgressBar: React.FC<AudioPlayerProgressBarProps> = ({
 
   return (
     <div className="inline-flex items-center">
-      <span className="min-w-[50px] mr-3 text-xs text-right text-slate-400">
+      <span className="mr-3 min-w-[50px] text-right text-xs text-slate-400">
         {formattedDuration}
       </span>
 
@@ -114,7 +114,7 @@ export const AudioPlayerProgressBar: React.FC<AudioPlayerProgressBarProps> = ({
         }}
       />
 
-      <span className="min-w-[50px] ml-3 text-xs text-left text-slate-400">
+      <span className="ml-3 min-w-[50px] text-left text-xs text-slate-400">
         {formattedCurrentTime}
       </span>
     </div>

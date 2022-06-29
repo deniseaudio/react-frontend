@@ -21,17 +21,17 @@ export const AudioPlayerQueue: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center mr-4">
+    <div className="mr-4 flex flex-col items-center">
       <CollectionIcon
         className={cx(
-          "w-5 h-5 cursor-pointer hover:text-slate-100",
+          "h-5 w-5 cursor-pointer hover:text-slate-100",
           isInQueueRoute ? "text-slate-100" : "text-slate-300"
         )}
         onClick={handleClick}
       />
 
       {isInQueueRoute ? (
-        <span className="inline-block w-[4px] h-[4px] mt-1 mb-[-8px] rounded-full bg-[#16a34a]" />
+        <span className="mt-1 mb-[-8px] inline-block h-[4px] w-[4px] rounded-full bg-[#16a34a]" />
       ) : null}
     </div>
   );

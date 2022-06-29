@@ -27,7 +27,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({
         className="flex items-center"
         onClick={() => toggleFolderState(directory.id)}
       >
-        <FolderIcon className="w-4 h-auto mr-2" />
+        <FolderIcon className="mr-2 h-auto w-4" />
         <p>{directory.name}</p>
       </button>
 

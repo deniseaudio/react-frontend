@@ -79,7 +79,7 @@ export const SongNode: React.FC<SongNodeProps> = ({ song, directorySongs }) => {
       className="flex items-center"
       onClick={() => playAudio()}
     >
-      <MusicNoteIcon className="w-4 h-auto mr-2" />
+      <MusicNoteIcon className="mr-2 h-auto w-4" />
       <p>{song.filename}</p>
     </button>
   );
