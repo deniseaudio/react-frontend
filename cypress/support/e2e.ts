@@ -18,3 +18,7 @@ import "./commands";
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+Cypress.config().videoCompression = 20;
+Cypress.config().viewportWidth = 1366;
+Cypress.config().viewportHeight = 768;
