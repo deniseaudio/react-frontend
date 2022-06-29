@@ -1,4 +1,3 @@
-# https://docs.cypress.io/guides/continuous-integration/github-actions#Caching-Dependencies-and-Build-Artifacts
 name: Build and run Cypress tests
 
 on: [push]
