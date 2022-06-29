@@ -25,3 +25,5 @@ jobs:
           wait-on: 'http://localhost:3001'
           # Custom command to start Cypress tests
           command: npm run test:e2e:ci
+          # Disable Cypress video recording
+          record: false
