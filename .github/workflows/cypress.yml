@@ -25,6 +25,11 @@ jobs:
           # Records the run for Cypress Dashboard
           record: true
         env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           # Pass GitHub token generated automatically by the action itself
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+
+      - name: Print result
+        run: |
+          echo Cypress finished with: ${{ steps.cypress.outcome }}
+          echo See results at ${{ steps.cypress.outputs.dashboardUrl }}
