@@ -29,7 +29,7 @@ jobs:
           record: true
           # Custom Cypress config
           # https://docs.cypress.io/guides/references/configuration
-          config: video=false,screenshotOnRunFailure=false
+          config: "video=false,screenshotOnRunFailure=false"
         env:
           # Pass GitHub token generated automatically by the action itself
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
