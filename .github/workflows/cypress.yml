@@ -18,7 +18,7 @@ jobs:
         with:
           browser: chrome
           # Build app
-          build: npm run build
+          build: npm run build -- --sourcemap false
           # Run web-server from build dist/ output
           start: npm run preview
           # Wait for web-server before starting tests
