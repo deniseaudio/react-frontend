@@ -9,11 +9,11 @@ jobs:
     # https://github.com/cypress-io/cypress-docker-images/tree/master/browsers
     container: cypress/browsers:node16.5.0-chrome97-ff96
     steps:
-      - name: 🛎  Checkout code from repository
+      - name: Checkout code from repository
         uses: actions/checkout@v2
 
       # Install NPM dependencies, cache them correctly and run all Cypress tests
-      - name: 🧪  Run Cypress E2E tests on Chrome
+      - name: Run Cypress E2E tests on Chrome
         uses: cypress-io/github-action@v4
         with:
           browser: chrome
