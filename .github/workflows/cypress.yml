@@ -30,5 +30,4 @@ jobs:
         env:
           # Pass GitHub token generated automatically by the action itself
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Pass Cypress Dashboard record key generated automatically by the action itself
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
