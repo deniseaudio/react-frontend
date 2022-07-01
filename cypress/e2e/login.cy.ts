@@ -41,7 +41,7 @@ describe("login view specs", () => {
     cy.get("input#email").type("test@example.com");
     cy.get("input#password").type("invalid-password");
     cy.get("button").click();
-    cy.get("p").contains("Invalid email or password").should("be.visible");
+    cy.contains("p", "Invalid email or password").should("be.visible");
   });
 
   it("can login with valid credentials", () => {
