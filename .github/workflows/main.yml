@@ -14,8 +14,6 @@ jobs:
       - name: Run Cypress E2E tests
         uses: cypress-io/github-action@v4
         with:
-          # Records the run for Cypress Dashboard
-          record: true
           # Build app
           build: npm run build -- --sourcemap false
           # Run web-server from build dist/ output
