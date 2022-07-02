@@ -16,7 +16,7 @@ if (
   Sentry.init({
     dsn: import.meta.env.VITE_SENTRY_DSN,
     integrations: [new BrowserTracing()],
-    tracesSampleRate: 1.0,
+    tracesSampleRate: 1,
     environment: "production",
   });
 }
@@ -27,5 +27,5 @@ ReactDOM.render(
       <App />
     </BrowserRouter>
   </React.StrictMode>,
-  document.getElementById("root")
+  document.querySelector("#root")
 );

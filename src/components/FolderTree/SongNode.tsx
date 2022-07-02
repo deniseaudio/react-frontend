@@ -46,7 +46,7 @@ export const SongNode: React.FC<SongNodeProps> = ({ song, directorySongs }) => {
     const currentSongIndex = directorySongs.findIndex((s) => s.id === songId);
     const songsToQueue = directorySongs.slice(currentSongIndex + 1);
     const noDuplicatesSongsToQueue = songsToQueue.filter(
-      (s) => !queue.find((q) => q.id === s.id)
+      (s) => !queue.some((q) => q.id === s.id)
     );
 
     updateQueue([...queue, ...noDuplicatesSongsToQueue]);
@@ -63,13 +63,11 @@ export const SongNode: React.FC<SongNodeProps> = ({ song, directorySongs }) => {
 
     audioManager
       .loadSong(song, token)
-      .then(() => {
-        loadSongSuccess();
-      })
-      .catch((err) => {
+      .then(() => loadSongSuccess())
+      .catch((error) => {
         loadSongFailed();
         audioManager.clean();
-        captureException(err);
+        captureException(error);
       });
   };
 

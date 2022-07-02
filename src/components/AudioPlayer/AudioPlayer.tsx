@@ -56,10 +56,10 @@ export const AudioPlayer: React.FC = () => {
       .then(() => {
         loadSongSuccess();
       })
-      .catch((err) => {
+      .catch((error) => {
         loadSongFailed();
         audioManager.clean();
-        captureException(err);
+        captureException(error);
       });
   };
 
@@ -120,7 +120,7 @@ export const AudioPlayer: React.FC = () => {
 
           console.log("[AudioPlayer] fetched cover:", url);
         })
-        .catch((err) => captureException(err));
+        .catch((error) => captureException(error));
     }
   }, [currentSong, token]);
 

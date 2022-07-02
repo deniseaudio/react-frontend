@@ -28,7 +28,7 @@ export const QueueView: React.FC = () => {
 
       {currentSong ? <QueueSongItem song={currentSong} index={0} /> : null}
 
-      {queue.length ? (
+      {queue.length > 0 ? (
         <p className="my-4 text-lg font-medium leading-tight text-slate-300">
           Next queued:
         </p>

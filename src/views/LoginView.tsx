@@ -40,9 +40,9 @@ export const LoginView: React.FC = () => {
           setIsLoading(false);
         }
       })
-      .catch((err) => {
+      .catch((error_) => {
         setIsLoading(false);
-        captureException(err);
+        captureException(error_);
       });
   };
 

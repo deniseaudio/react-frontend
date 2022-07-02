@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint unicorn/prefer-module: "off" */
 module.exports = {
   plugins: {
     tailwindcss: {},

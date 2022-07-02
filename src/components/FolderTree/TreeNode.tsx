@@ -16,7 +16,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({
   toggleFolderState,
 }) => {
   const isFolderOpened = useMemo(
-    () => foldersOpened.findIndex((id) => id === directory.id) > -1,
+    () => foldersOpened.includes(directory.id),
     [foldersOpened, directory.id]
   );
 

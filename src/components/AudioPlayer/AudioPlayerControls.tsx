@@ -35,10 +35,10 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({
     }
 
     if (audioContext.state === "running") {
-      audioContext.suspend().catch((err) => captureException(err));
+      audioContext.suspend().catch((error) => captureException(error));
       setIsPlaying(false);
     } else if (audioContext.state === "suspended") {
-      audioContext.resume().catch((err) => captureException(err));
+      audioContext.resume().catch((error) => captureException(error));
       setIsPlaying(true);
     }
   };

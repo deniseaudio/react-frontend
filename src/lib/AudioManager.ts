@@ -5,6 +5,7 @@ import type { APISong } from "@/interfaces/api.interfaces";
 import { getSongStream } from "@/api";
 import { EventEmitter } from "./EventEmitter";
 
+// eslint-disable-next-line unicorn/prefer-event-target
 class AudioManager extends EventEmitter {
   private audioContext: AudioContext | null = null;
 
@@ -115,8 +116,8 @@ class AudioManager extends EventEmitter {
     if (this.audioContext) {
       console.log("[AudioManager] Closing audio-context.");
 
-      this.audioContext.suspend().catch((err) => captureException(err));
-      this.audioContext.close().catch((err) => captureException(err));
+      this.audioContext.suspend().catch((error) => captureException(error));
+      this.audioContext.close().catch((error) => captureException(error));
       this.setAudioContext(null);
     }
 
@@ -298,7 +299,7 @@ class AudioManager extends EventEmitter {
         return;
       }
 
-      const now = new Date().getTime();
+      const now = Date.now();
       const delta = this.currentTimeLastUpdate
         ? now - this.currentTimeLastUpdate
         : 0;
@@ -311,7 +312,7 @@ class AudioManager extends EventEmitter {
     // When audio-context is suspended, make sure to keep up with the last
     // updated time.
     else if (this.audioContext && this.audioContext.state === "suspended") {
-      this.currentTimeLastUpdate = new Date().getTime();
+      this.currentTimeLastUpdate = Date.now();
     }
   }
 }

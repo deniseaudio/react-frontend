@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint unicorn/prefer-module: "off", import/no-extraneous-dependencies: "off" */
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {

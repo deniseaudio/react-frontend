@@ -1,3 +1,4 @@
+/* eslint import/no-extraneous-dependencies: "off" */
 import { defineConfig } from "cypress";
 
 export default defineConfig({

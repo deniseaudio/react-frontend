@@ -63,7 +63,7 @@ export const FolderTree: React.FC<FolderTreeProps> = ({ rootDirectory }) => {
             }
           }
         })
-        .catch((err) => captureException(err));
+        .catch((error) => captureException(error));
     }
   };
 
@@ -111,7 +111,7 @@ export const FolderTree: React.FC<FolderTreeProps> = ({ rootDirectory }) => {
 
   // When top-level directory or any directory is fetched, re-order directories.
   useEffect(() => {
-    if (topLevelDirectory?.children.length && fetchedDirectories.length) {
+    if (topLevelDirectory?.children.length && fetchedDirectories.length > 0) {
       setOrderedDirectories([]);
 
       topLevelDirectory.children.forEach((child) => {

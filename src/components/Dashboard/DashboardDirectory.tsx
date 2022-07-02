@@ -31,7 +31,7 @@ export const DashboardDirectory: React.FC<DashboardDirectoryProps> = ({
             setRootDirectories([...data.directories]);
           }
         })
-        .catch((err) => captureException(err));
+        .catch((error) => captureException(error));
     }
   }, [token]);
 
