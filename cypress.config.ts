@@ -2,6 +2,8 @@
 import { defineConfig } from "cypress";
 
 export default defineConfig({
+  projectId: "7n337z",
+
   component: {
     devServer: {
       framework: "react",
@@ -15,5 +17,4 @@ export default defineConfig({
 
   viewportHeight: 768,
   viewportWidth: 1366,
-  videoCompression: 20,
 });
