@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { captureException } from "@sentry/react";
 
-import { postLogin } from "@/api";
+import { postLogin, postRegister } from "@/api";
 import { useStore } from "@/store/store";
 import { LoginForm } from "@/components/Register/LoginForm";
 import { RegisterForm } from "@/components/Register/RegisterForm";
@@ -37,6 +37,38 @@ export const LoginView: React.FC = () => {
     }
   };
 
+  const handleCreate = async (
+    username: string,
+    email: string,
+    password: string,
+    secretKey: string
+  ) => {
+    setIsLoading(true);
+    setLoginError("");
+
+    try {
+      const { data, response } = await postRegister(
+        username,
+        email,
+        password,
+        secretKey
+      );
+
+      setIsLoading(false);
+
+      if (response.ok && data) {
+        login(data.token, data.user);
+        navigate("/audio-player");
+      } else {
+        setLoginError("The provided secret-key is invalid.");
+      }
+    } catch (error) {
+      setIsLoading(false);
+      setLoginError("Something went wrong, please try again later.");
+      captureException(error);
+    }
+  };
+
   return (
     <div className="relative flex min-h-screen items-center justify-center">
       {displayLogin ? (
@@ -47,7 +79,12 @@ export const LoginView: React.FC = () => {
           handleLogin={handleLogin}
         />
       ) : (
-        <RegisterForm setDisplayLogin={setDisplayLogin} />
+        <RegisterForm
+          isLoading={isLoading}
+          loginError={loginError}
+          setDisplayLogin={setDisplayLogin}
+          handleCreate={handleCreate}
+        />
       )}
     </div>
   );

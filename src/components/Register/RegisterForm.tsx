@@ -14,7 +14,15 @@ export type RegisterFormInputs = {
 };
 
 export type RegisterFormProps = {
+  isLoading: boolean;
+  loginError: string;
   setDisplayLogin: (displayLogin: boolean) => void;
+  handleCreate: (
+    username: string,
+    email: string,
+    password: string,
+    secretKey: string
+  ) => void;
 };
 
 const schema = yup.object({
@@ -31,7 +39,10 @@ const schema = yup.object({
 });
 
 export const RegisterForm: React.FC<RegisterFormProps> = ({
+  isLoading,
+  loginError,
   setDisplayLogin,
+  handleCreate,
 }) => {
   const form = useForm<RegisterFormInputs>({
     resolver: yupResolver(schema),
@@ -39,6 +50,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 
   const submitHandler: SubmitHandler<RegisterFormInputs> = (data, event) => {
     event?.preventDefault();
+    handleCreate(data.username, data.email, data.password, data.secretKey);
   };
 
   return (
@@ -84,7 +96,13 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         fieldError={form.formState.errors.secretKey}
       />
 
-      <Button type="submit">Register</Button>
+      <p className="text-center text-sm font-medium text-red-500">
+        {loginError}
+      </p>
+
+      <Button type="submit" disabled={isLoading}>
+        Register
+      </Button>
 
       <button
         type="button"

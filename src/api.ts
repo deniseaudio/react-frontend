@@ -24,6 +24,21 @@ export const postLogin = (email: string, password: string) => {
   );
 };
 
+export const postRegister = (
+  username: string,
+  email: string,
+  password: string,
+  secretKey: string
+) => {
+  return fetch(`${API_URL}/api/user/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, email, password, secretKey }),
+  }).then((response) =>
+    convertResponse<{ token: string; user: APIUser }>(response)
+  );
+};
+
 export const getRootDirectories = (token: string) => {
   return fetch(`${API_URL}/api/app/root-directories`, {
     headers: {
