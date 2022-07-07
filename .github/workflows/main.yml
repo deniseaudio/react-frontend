@@ -6,6 +6,12 @@ on: [push]
 jobs:
   cypress-run:
     runs-on: ubuntu-20.04
+
+    container:
+      image: cypress/browsers:node16.5.0-chrome94-ff93
+      # Run Cypress as a specific user. This will allow the video recording to be saved.
+      options: --user 1001
+
     steps:
       - name: Checkout code from repository
         uses: actions/checkout@v2
