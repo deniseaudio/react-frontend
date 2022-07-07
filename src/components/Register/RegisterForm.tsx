@@ -56,6 +56,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   return (
     <RegisterFormLayout onSubmit={form.handleSubmit(submitHandler)}>
       <Input
+        id="username"
         name="username"
         label="Username"
         placeholder="Username"
@@ -66,6 +67,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       />
 
       <Input
+        id="email"
         name="email"
         label="Email address"
         placeholder="Email address"
@@ -76,6 +78,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       />
 
       <Input
+        id="password"
         name="password"
         label="Password"
         placeholder="Password"
@@ -87,6 +90,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       />
 
       <Input
+        id="secret-key"
         name="secretKey"
         label="Secret Key"
         placeholder="Secrey Key"
