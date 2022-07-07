@@ -12,7 +12,10 @@ export type LoginFormInputs = {
 };
 
 export type LoginFormProps = {
+  isLoading: boolean;
+  loginError: string;
   setDisplayLogin: (displayLogin: boolean) => void;
+  handleLogin: (email: string, password: string) => void;
 };
 
 const schema = yup
@@ -25,18 +28,25 @@ const schema = yup
   })
   .required();
 
-export const LoginForm: React.FC<LoginFormProps> = ({ setDisplayLogin }) => {
+export const LoginForm: React.FC<LoginFormProps> = ({
+  isLoading,
+  loginError,
+  setDisplayLogin,
+  handleLogin,
+}) => {
   const form = useForm<LoginFormInputs>({
     resolver: yupResolver(schema),
   });
 
   const submitHandler: SubmitHandler<LoginFormInputs> = (data, event) => {
     event?.preventDefault();
+    handleLogin(data.email, data.password);
   };
 
   return (
     <RegisterFormLayout onSubmit={form.handleSubmit(submitHandler)}>
       <Input
+        id="email"
         name="email"
         label="Email address"
         placeholder="Email address"
@@ -47,6 +57,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ setDisplayLogin }) => {
       />
 
       <Input
+        id="password"
         name="password"
         label="Password"
         placeholder="Password"
@@ -57,7 +68,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({ setDisplayLogin }) => {
         fieldError={form.formState.errors.password}
       />
 
-      <Button type="submit">Sign in</Button>
+      <p className="text-center text-sm font-medium text-red-500">
+        {loginError}
+      </p>
+
+      <Button type="submit" disabled={isLoading}>
+        Sign in
+      </Button>
 
       <button
         type="button"
