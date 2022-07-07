@@ -1,7 +1,8 @@
 describe("login view specs", () => {
   it("can't login if fields are empty", () => {
     cy.visit("/");
-    cy.get("button").contains("Login").click();
+    cy.get("button").contains("Sign in").click();
+    cy.contains("p", "This field is required");
     cy.get("form").should("exist");
   });
 
@@ -12,19 +13,27 @@ describe("login view specs", () => {
     });
   });
 
-  it("can't login without invalid email", () => {
+  it("can't login without an email value", () => {
     cy.visit("/");
-    cy.get("input#email").type("test");
-    cy.get("button").click();
+    cy.contains("button", "Sign in").click();
+    cy.contains("p", "This field is required.");
+  });
+
+  it("can't login with an invalid email", () => {
+    cy.visit("/");
+    cy.get("input#email").type("test invalid email");
+    cy.contains("button", "Sign in").click();
+    cy.contains("p", "Invalid email address.");
     cy.location().should((location) => {
       expect(location.pathname).to.eq("/");
     });
   });
 
-  it("can't login without password", () => {
+  it("can't login without a password value", () => {
     cy.visit("/");
     cy.get("input#email").type("test@example.com");
-    cy.get("button").click();
+    cy.contains("button", "Sign in").click();
+    cy.contains("p", "This field is required");
     cy.location().should((location) => {
       expect(location.pathname).to.eq("/");
     });
@@ -40,8 +49,8 @@ describe("login view specs", () => {
 
     cy.get("input#email").type("test@example.com");
     cy.get("input#password").type("invalid-password");
-    cy.get("button").click();
-    cy.contains("p", "Invalid email or password").should("be.visible");
+    cy.contains("button", "Sign in").click();
+    cy.contains("p", "Invalid email or password");
   });
 
   it("can login with valid credentials", () => {
@@ -54,7 +63,7 @@ describe("login view specs", () => {
 
     cy.get("input#email").type("test@example.com");
     cy.get("input#password").type("invalid-password");
-    cy.get("button").click();
+    cy.contains("button", "Sign in").click();
     cy.location().should((location) => {
       expect(location.pathname).to.eq("/audio-player");
     });
