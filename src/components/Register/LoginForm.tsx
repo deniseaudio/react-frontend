@@ -15,6 +15,7 @@ export type LoginFormProps = {
   isLoading: boolean;
   loginError: string;
   setDisplayLogin: (displayLogin: boolean) => void;
+  setLoginError: (loginError: string) => void;
   handleLogin: (email: string, password: string) => void;
 };
 
@@ -32,6 +33,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   isLoading,
   loginError,
   setDisplayLogin,
+  setLoginError,
   handleLogin,
 }) => {
   const form = useForm<LoginFormInputs>({
@@ -79,7 +81,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       <button
         type="button"
         className="mt-6 text-sm font-medium text-white underline"
-        onClick={() => setDisplayLogin(false)}
+        onClick={() => {
+          setDisplayLogin(false);
+          setLoginError("");
+        }}
       >
         Create an account
       </button>

@@ -17,6 +17,7 @@ export type RegisterFormProps = {
   isLoading: boolean;
   loginError: string;
   setDisplayLogin: (displayLogin: boolean) => void;
+  setLoginError: (loginError: string) => void;
   handleCreate: (
     username: string,
     email: string,
@@ -42,6 +43,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   isLoading,
   loginError,
   setDisplayLogin,
+  setLoginError,
   handleCreate,
 }) => {
   const form = useForm<RegisterFormInputs>({
@@ -111,7 +113,10 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       <button
         type="button"
         className="mt-6 text-sm font-medium text-white underline"
-        onClick={() => setDisplayLogin(true)}
+        onClick={() => {
+          setDisplayLogin(true);
+          setLoginError("");
+        }}
       >
         Login to your account
       </button>

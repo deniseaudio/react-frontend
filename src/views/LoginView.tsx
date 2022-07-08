@@ -59,8 +59,12 @@ export const LoginView: React.FC = () => {
       if (response.ok && data) {
         login(data.token, data.user);
         navigate("/audio-player");
-      } else {
+      } else if (response.status === 401) {
         setLoginError("The provided secret-key is invalid.");
+      } else if (response.status === 409) {
+        setLoginError("Email or username already in use.");
+      } else {
+        setLoginError("Something went wrong, please try again later.");
       }
     } catch (error) {
       setIsLoading(false);
@@ -76,6 +80,7 @@ export const LoginView: React.FC = () => {
           isLoading={isLoading}
           loginError={loginError}
           setDisplayLogin={setDisplayLogin}
+          setLoginError={setLoginError}
           handleLogin={handleLogin}
         />
       ) : (
@@ -83,6 +88,7 @@ export const LoginView: React.FC = () => {
           isLoading={isLoading}
           loginError={loginError}
           setDisplayLogin={setDisplayLogin}
+          setLoginError={setLoginError}
           handleCreate={handleCreate}
         />
       )}

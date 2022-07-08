@@ -29,6 +29,40 @@ describe("register view specs", () => {
     cy.contains("p", "The provided secret-key is invalid.");
   });
 
+  it("can't create an account if email is already used", () => {
+    cy.intercept("/api/user/register", {
+      statusCode: 409,
+      body: {},
+    });
+
+    cy.visit("/");
+
+    cy.contains("button", "Create an account").click();
+    cy.get("input#username").type("username");
+    cy.get("input#email").type("test@example.com");
+    cy.get("input#password").type("azerty123");
+    cy.get("input#secret-key").type("50e0172aea0b");
+    cy.contains("button", "Register").click();
+    cy.contains("p", "Email or username already in use.");
+  });
+
+  it("can't create an account if an unexpected error happens", () => {
+    cy.intercept("/api/user/register", {
+      statusCode: 400,
+      body: {},
+    });
+
+    cy.visit("/");
+
+    cy.contains("button", "Create an account").click();
+    cy.get("input#username").type("username");
+    cy.get("input#email").type("test@example.com");
+    cy.get("input#password").type("azerty123");
+    cy.get("input#secret-key").type("50e0172aea0b");
+    cy.contains("button", "Register").click();
+    cy.contains("p", "Something went wrong, please try again later.");
+  });
+
   it("can create an account if all the fields are filled", () => {
     cy.intercept("/api/user/register", {
       statusCode: 200,
