@@ -52,10 +52,10 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({
       <button
         type="button"
         className={cx([
-          "flex h-12 w-12 items-center justify-center text-slate-300 transition-colors duration-100 hover:text-slate-50",
+          "flex h-12 w-12 items-center justify-center text-neutral-300 transition-colors duration-100 hover:text-neutral-50",
           isSongLoading || !hasPreviousSong
             ? "cursor-not-allowed text-opacity-50"
-            : " cursor-pointer text-opacity-100",
+            : "cursor-pointer text-opacity-100",
         ])}
         onClick={handlePlayPreviousSong}
         disabled={isSongLoading || !hasPreviousSong}
@@ -66,7 +66,7 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({
       <button
         type="button"
         className={cx([
-          "flex h-12 w-12 items-center justify-center text-slate-50 transition-transform duration-100 hover:scale-110 focus:outline-none",
+          "flex h-12 w-12 items-center justify-center text-neutral-50 transition-transform duration-100 hover:scale-110 focus:outline-none",
           isSongLoading
             ? "cursor-not-allowed text-opacity-50"
             : "cursor-pointer text-opacity-100",
@@ -84,10 +84,10 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({
       <button
         type="button"
         className={cx([
-          "flex h-12 w-12 items-center justify-center text-slate-300 transition-colors duration-100 hover:text-slate-50",
+          "flex h-12 w-12 items-center justify-center text-neutral-300 transition-colors duration-100 hover:text-neutral-50",
           isSongLoading || !hasNextSong
             ? "cursor-not-allowed text-opacity-50"
-            : " cursor-pointer text-opacity-100",
+            : "cursor-pointer text-opacity-100",
         ])}
         onClick={handlePlayNextSong}
         disabled={isSongLoading || !hasNextSong}

@@ -156,7 +156,7 @@ export const AudioPlayer: React.FC = () => {
   }, [token, queue, currentSong, isSongLoading]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 flex w-full items-center justify-center bg-gray-800 px-6 py-4">
+    <div className="fixed bottom-0 left-0 right-0 z-20 flex w-full items-center justify-center border-t border-neutral-800 bg-neutral-900 px-6 py-4">
       <AudioPlayerTrackInfo
         imageUrl={image}
         artist={currentSong?.artist.name || "Not playing..."}

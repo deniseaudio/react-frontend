@@ -87,7 +87,7 @@ export const AudioPlayerProgressBar: React.FC<AudioPlayerProgressBarProps> = ({
   return (
     <div className="inline-flex items-center">
       <span className="mr-3 min-w-[50px] text-right text-xs text-slate-400">
-        {formattedDuration}
+        {formattedCurrentTime}
       </span>
 
       <ReactInputSlider
@@ -104,18 +104,19 @@ export const AudioPlayerProgressBar: React.FC<AudioPlayerProgressBarProps> = ({
           track: {
             width: "25vw",
             height: "6px",
-            backgroundColor: "#4b5563",
+            backgroundColor: "#404040",
           },
           thumb: {
             width: "12px",
             height: "12px",
+            backgroundColor: "#fafafa",
           },
-          active: { backgroundColor: "#16a34a" },
+          active: { backgroundColor: "#22c55e" },
         }}
       />
 
       <span className="ml-3 min-w-[50px] text-left text-xs text-slate-400">
-        {formattedCurrentTime}
+        {formattedDuration}
       </span>
     </div>
   );

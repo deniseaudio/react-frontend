@@ -14,7 +14,7 @@ export const AudioPlayerVolume: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-end text-slate-300">
+    <div className="flex items-center justify-end text-neutral-50">
       <VolumeUpIcon className="mr-4 h-5 w-5" />
 
       <ReactInputSlider
@@ -28,13 +28,14 @@ export const AudioPlayerVolume: React.FC = () => {
           track: {
             width: "125px",
             height: "6px",
-            backgroundColor: "#e2e8f0",
+            backgroundColor: "#404040",
           },
           thumb: {
             width: "12px",
             height: "12px",
+            backgroundColor: "#fafafa",
           },
-          active: { backgroundColor: "#16a34a" },
+          active: { backgroundColor: "#22c55e" },
         }}
       />
     </div>

@@ -39,26 +39,26 @@ export const AudioPlayerTrackInfo: React.FC<AudioPlayerTrackInfoProps> = ({
           alt=""
         />
       ) : (
-        <div className="mr-4 h-14 w-14 rounded-md border border-slate-700" />
+        <div className="mr-4 h-14 w-14 rounded-md border border-neutral-800" />
       )}
 
       <div className="flex flex-col justify-center">
-        <p className="mb-1 max-w-[33ch] overflow-hidden text-ellipsis whitespace-nowrap text-sm font-medium leading-snug text-slate-50">
+        <p className="mb-1 max-w-[33ch] overflow-hidden text-ellipsis whitespace-nowrap font-metropolis text-sm font-medium leading-snug text-neutral-50">
           {title}
         </p>
 
-        <p className="max-w-[66ch] overflow-hidden text-ellipsis whitespace-nowrap text-xs font-normal leading-snug text-slate-100">
+        <p className="max-w-[66ch] overflow-hidden text-ellipsis whitespace-nowrap font-metropolis text-xs font-normal leading-snug text-neutral-300">
           {artist}
         </p>
 
         {songProgression && !isBuffering ? (
-          <p className="text-xs font-normal leading-snug text-slate-200">
+          <p className="font-metropolis text-xs font-normal leading-snug text-neutral-300">
             Loading {loadingPercentage}%...
           </p>
         ) : null}
 
         {isBuffering ? (
-          <p className="text-xs font-normal leading-snug text-slate-200">
+          <p className="font-metropolis text-xs font-normal leading-snug text-neutral-300">
             Buffering...
           </p>
         ) : null}
