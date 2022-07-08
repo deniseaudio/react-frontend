@@ -1,44 +1,41 @@
 import React from "react";
-import shallow from "zustand/shallow";
 import cx from "classnames";
 
 import { useStore } from "@/store/store";
 import { QueueSongItem } from "@/components/Queue/QueueSongItem";
 
 export const QueueView: React.FC = () => {
-  const { queue, currentSong } = useStore(
-    (state) => ({ queue: state.queue, currentSong: state.currentSong }),
-    shallow
-  );
+  const queue = useStore((state) => state.queue);
+  const currentSong = useStore((state) => state.currentSong);
 
   return (
-    <div className="max-h-[600px] overflow-y-auto rounded-md bg-gray-600 px-8 py-4">
-      <h3 className="mb-3 text-2xl font-medium leading-tight text-slate-50">
-        Queue
-      </h3>
+    <>
+      <h3 className="mb-6 font-metropolis text-3xl text-neutral-50">Queue</h3>
 
-      <p
-        className={cx(
-          "text-lg font-medium leading-tight text-slate-300",
-          currentSong && "mb-4"
-        )}
-      >
-        {currentSong ? "Now playing" : "No song playing"}
-      </p>
-
-      {currentSong ? <QueueSongItem song={currentSong} index={0} /> : null}
-
-      {queue.length > 0 ? (
-        <p className="my-4 text-lg font-medium leading-tight text-slate-300">
-          Next queued:
+      <div className="rounded-xl border border-neutral-800 bg-neutral-800 px-8 py-8 shadow-2xl">
+        <p
+          className={cx(
+            "font-metropolis text-lg font-medium leading-tight text-neutral-400",
+            currentSong && "mb-4"
+          )}
+        >
+          {currentSong ? "Now playing" : "No song playing"}
         </p>
-      ) : null}
 
-      <div className="flex flex-col space-y-2">
-        {queue.map((song, index) => (
-          <QueueSongItem key={song.id} song={song} index={index + 1} />
-        ))}
+        {currentSong ? <QueueSongItem song={currentSong} index={0} /> : null}
+
+        {queue.length > 0 ? (
+          <p className="my-4 text-lg font-medium leading-tight text-neutral-400">
+            Next queued
+          </p>
+        ) : null}
+
+        <div className="flex flex-col space-y-2">
+          {queue.map((song, index) => (
+            <QueueSongItem key={song.id} song={song} index={index + 1} />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };

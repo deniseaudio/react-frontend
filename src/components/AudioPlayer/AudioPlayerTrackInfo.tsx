@@ -47,7 +47,7 @@ export const AudioPlayerTrackInfo: React.FC<AudioPlayerTrackInfoProps> = ({
           {title}
         </p>
 
-        <p className="max-w-[66ch] overflow-hidden text-ellipsis whitespace-nowrap font-metropolis text-xs font-normal leading-snug text-neutral-300">
+        <p className="max-w-[66ch] overflow-hidden text-ellipsis whitespace-nowrap font-metropolis text-xs font-normal leading-snug text-neutral-400">
           {artist}
         </p>
 
