@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
 
 import { Navbar } from "@/components/Navbar";
+import { Sidebar } from "@/components/Sidebar";
 import { AudioPlayer } from "@/components/AudioPlayer";
 
 /**
@@ -12,17 +13,18 @@ export const DefaultLayout: React.FC = () => {
   const location = useLocation();
 
   return location.pathname !== "/" ? (
-    <>
+    <div className="relative min-h-screen">
+      <Sidebar />
       <Navbar />
 
-      <main className="mx-auto max-w-[1024px] pb-24">
-        <div className="p-8">
+      <main className="pt-20 pl-72">
+        <div className="px-8 pt-12">
           <Outlet />
         </div>
       </main>
 
       <AudioPlayer />
-    </>
+    </div>
   ) : (
     <Outlet />
   );
