@@ -1,10 +1,12 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import cx from "classnames";
 import {
   ClipboardListIcon,
   CollectionIcon,
   HeartIcon,
   HomeIcon,
   ViewListIcon,
+  UserIcon,
 } from "@heroicons/react/outline";
 
 import { LogoDeniseAudio } from "@/components/ui/LogoDeniseAudio";
@@ -42,6 +44,11 @@ export const Sidebar: React.FC = () => {
       name: "History",
       icon: <ClipboardListIcon className="mr-3 h-auto w-5" />,
     },
+    {
+      to: "/me",
+      name: "Profile",
+      icon: <UserIcon className="mr-3 h-auto w-5" />,
+    },
   ];
 
   return (
@@ -53,12 +60,19 @@ export const Sidebar: React.FC = () => {
       <ul className="flex flex-col space-y-6 px-8 py-8">
         {links.map((link) => (
           <li className="flex flex-col" key={link.to}>
-            <Link
+            <NavLink
               to={link.to}
-              className="flex items-center text-neutral-300 transition-colors duration-200 ease-in-out hover:text-neutral-50"
+              className={({ isActive }) =>
+                cx([
+                  "flex items-center font-metropolis transition-colors duration-200 ease-in-out",
+                  isActive
+                    ? "text-white"
+                    : "text-neutral-400 hover:text-neutral-50",
+                ])
+              }
             >
               {link.icon} {link.name}
-            </Link>
+            </NavLink>
           </li>
         ))}
       </ul>
