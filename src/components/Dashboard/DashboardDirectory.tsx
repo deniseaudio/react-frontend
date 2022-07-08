@@ -36,19 +36,21 @@ export const DashboardDirectory: React.FC<DashboardDirectoryProps> = ({
   }, [token]);
 
   return (
-    <div className="max-h-[600px] overflow-y-auto rounded-md bg-gray-600 px-8 py-4">
-      <h3 className="mb-3 text-2xl font-medium leading-tight text-slate-50">
-        Library browser
+    <>
+      <h3 className="mb-6 font-metropolis text-3xl text-neutral-50">
+        Library Browser
       </h3>
 
-      {/* Create a FolderTree for each root directory. */}
-      {rootDirectories.map((rootDirectory) => (
-        <FolderTree
-          key={`root-${rootDirectory.id}`}
-          rootDirectory={rootDirectory}
-          className={className}
-        />
-      ))}
-    </div>
+      <div className="rounded-xl border border-neutral-800 bg-neutral-800 px-8 py-8 shadow-2xl">
+        {/* Create a FolderTree for each root directory. */}
+        {rootDirectories.map((rootDirectory) => (
+          <FolderTree
+            key={`root-${rootDirectory.id}`}
+            rootDirectory={rootDirectory}
+            className={className}
+          />
+        ))}
+      </div>
+    </>
   );
 };

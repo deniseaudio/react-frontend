@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { FolderIcon } from "@heroicons/react/solid";
+import { FolderIcon, FolderOpenIcon } from "@heroicons/react/solid";
 
 import { OrderedDirectory } from "@/interfaces/directory.interfaces";
 import { SongNode } from "./SongNode";
@@ -21,13 +21,17 @@ export const TreeNode: React.FC<TreeNodeProps> = ({
   );
 
   return (
-    <div className="text-slate-100">
+    <div className="text-neutral-50">
       <button
         type="button"
         className="flex items-center"
         onClick={() => toggleFolderState(directory.id)}
       >
-        <FolderIcon className="mr-2 h-auto w-4" />
+        {isFolderOpened ? (
+          <FolderOpenIcon className="mr-2 h-auto w-4" />
+        ) : (
+          <FolderIcon className="mr-2 h-auto w-4" />
+        )}
         <p>{directory.name}</p>
       </button>
 

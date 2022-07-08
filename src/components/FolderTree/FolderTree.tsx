@@ -125,7 +125,7 @@ export const FolderTree: React.FC<FolderTreeProps> = ({ rootDirectory }) => {
 
   return (
     <>
-      <div className="flex items-center text-slate-100">
+      <div className="flex items-center text-neutral-200">
         <CollectionIcon className="mr-2 h-auto w-4" />
         <p className="font-semibold">{rootDirectory.name} (root)</p>
       </div>
