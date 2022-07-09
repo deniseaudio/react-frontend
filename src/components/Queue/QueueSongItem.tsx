@@ -28,7 +28,7 @@ export const QueueSongItem: React.FC<SongListItemProps> = ({ song, index }) => {
 
     const queueSong = queue[index - 1];
 
-    updateQueue([...queue.slice(index)]);
+    updateQueue([...queue.slice(index - 1)]);
     audioManager.emit(AudioManagerEvents.PREPARE_SONG, {
       song: queueSong,
       initiator: SongInitiatorTypes.QUEUE,
