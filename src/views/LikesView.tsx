@@ -32,11 +32,23 @@ export const LikesView: React.FC = () => {
       <h3 className="mb-6 font-metropolis text-3xl text-neutral-50">Likes</h3>
 
       <div className="rounded-xl border border-neutral-800 bg-neutral-800 px-8 py-8 shadow-2xl">
-        <div className="flex flex-col">
-          {likedSongs.map((song, index) => (
-            <LikeSongItem key={song.id} song={song} index={index} />
-          ))}
-        </div>
+        {hasFetched ? (
+          <>
+            <p className="mb-4 font-metropolis text-lg font-medium leading-tight text-neutral-400">
+              Liked songs
+            </p>
+
+            <div className="flex flex-col">
+              {likedSongs.map((song, index) => (
+                <LikeSongItem key={song.id} song={song} index={index} />
+              ))}
+            </div>
+          </>
+        ) : (
+          <p className="mb-4 font-metropolis text-lg font-medium leading-tight text-neutral-400">
+            Loading...
+          </p>
+        )}
       </div>
     </>
   );
