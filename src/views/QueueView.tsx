@@ -25,12 +25,12 @@ export const QueueView: React.FC = () => {
         {currentSong ? <QueueSongItem song={currentSong} index={0} /> : null}
 
         {queue.length > 0 ? (
-          <p className="my-4 text-lg font-medium leading-tight text-neutral-400">
+          <p className="mt-8 mb-4 font-metropolis text-lg font-medium leading-tight text-neutral-400">
             Next queued
           </p>
         ) : null}
 
-        <div className="flex flex-col space-y-2">
+        <div className="flex flex-col">
           {queue.map((song, index) => (
             <QueueSongItem key={song.id} song={song} index={index + 1} />
           ))}
