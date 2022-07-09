@@ -1,6 +1,6 @@
 import cx from "classnames";
 import { addSeconds, format } from "date-fns";
-import { PlayIcon } from "@heroicons/react/solid";
+import { PlayIcon, MinusCircleIcon } from "@heroicons/react/solid";
 import { captureException } from "@sentry/react";
 
 import type { APISong } from "@/interfaces/api.interfaces";
@@ -33,6 +33,10 @@ export const QueueSongItem: React.FC<SongListItemProps> = ({ song, index }) => {
       song: queueSong,
       initiator: SongInitiatorTypes.QUEUE,
     });
+  };
+
+  const removeQueueItem = () => {
+    updateQueue([...queue].filter((_, i) => i !== index - 1));
   };
 
   return (
@@ -70,10 +74,22 @@ export const QueueSongItem: React.FC<SongListItemProps> = ({ song, index }) => {
         </p>
       </div>
 
-      <div className="ml-auto flex flex-col justify-center">
+      <div className="ml-auto flex items-center justify-center">
         <p className="overflow-hidden text-ellipsis font-mono text-sm font-medium leading-snug text-neutral-400">
           {format(addSeconds(new Date(0), song.length), "m:ss")}
         </p>
+
+        <div className="w-8">
+          {!isCurrentSong ? (
+            <button
+              type="button"
+              className="ml-3 hidden h-auto w-5 text-neutral-400 group-hover:block"
+              onClick={removeQueueItem}
+            >
+              <MinusCircleIcon className="h-auto w-full" />
+            </button>
+          ) : null}
+        </div>
       </div>
     </div>
   );
