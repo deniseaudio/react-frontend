@@ -3,9 +3,18 @@ import shallow from "zustand/shallow";
 import { captureException } from "@sentry/react";
 
 import type { APISong } from "@/interfaces/api.interfaces";
+import { SongInitiatorTypes } from "@/interfaces/song.interfaces";
 import { useStore } from "@/store/store";
 import { getSongCover } from "@/api";
-import { audioManager } from "@/lib/AudioManager";
+import { AudioManagerEvents, audioManager } from "@/lib/AudioManager";
+import {
+  setupMediaSessionMetadata,
+  setupMediaSessionActionHandlers,
+  pauseMediaSession,
+  closeMediaSession,
+  resumeMediaSession,
+  updateMediaSessionPosition,
+} from "@/lib/MediaSession";
 
 import { AudioPlayerTrackInfo } from "./AudioPlayerTrackInfo";
 import { AudioPlayerControls } from "./AudioPlayerControls";
@@ -42,20 +51,15 @@ export const AudioPlayer: React.FC = () => {
   );
 
   const [image, setImage] = useState<string>("");
-  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
-  const playSong = (
-    song: APISong,
-    initiator: "library-browser" | "queue" | "history"
-  ) => {
+  const playSong = (song: APISong, initiator: SongInitiatorTypes) => {
     loadSong(song, initiator);
     audioManager.clean();
 
     audioManager
       .loadSong(song, token!)
-      .then(() => {
-        loadSongSuccess();
-      })
+      .then(() => loadSongSuccess())
       .catch((error) => {
         loadSongFailed();
         audioManager.clean();
@@ -63,16 +67,36 @@ export const AudioPlayer: React.FC = () => {
       });
   };
 
-  const handleUpdatedAudioContext = (event: CustomEvent) => {
-    console.log(
-      "[AudioPlayer] AudioContext updated from AudioManager",
-      event.detail
-    );
+  const playPreviousSong = () => {
+    const previousSong = history[0];
 
-    setAudioContext(event.detail as AudioContext | null);
+    if (!token || isSongLoading || !previousSong) {
+      return;
+    }
+
+    playSong(previousSong, SongInitiatorTypes.HISTORY);
   };
 
-  const handleSongLoadingProgression = (event: CustomEvent) => {
+  const playNextSong = () => {
+    const nextSong = queue[0];
+
+    if (!token || isSongLoading || currentSong?.id === nextSong.id) {
+      return;
+    }
+
+    playSong(nextSong, SongInitiatorTypes.QUEUE);
+  };
+
+  const onLoadSong = (event: CustomEvent) => {
+    const { song, initiator } = event.detail as {
+      song: APISong;
+      initiator: SongInitiatorTypes;
+    };
+
+    playSong(song, initiator);
+  };
+
+  const onSongLoadingProgression = (event: CustomEvent) => {
     const songProgression = event.detail as {
       contentLength: number;
       receivedLength: number;
@@ -84,24 +108,32 @@ export const AudioPlayer: React.FC = () => {
     });
   };
 
-  const handlePlayPreviousSong = () => {
-    const previousSong = history[0];
+  const onSongPlaying = (e: CustomEvent) => {
+    const song = e.detail as APISong;
 
-    if (!token || isSongLoading) {
-      return;
-    }
-
-    playSong(previousSong, "history");
+    setIsPlaying(true);
+    setupMediaSessionMetadata(song, image);
   };
 
-  const handlePlayNextSong = () => {
-    const nextSong = queue[0];
+  const onSongPaused = () => {
+    pauseMediaSession();
+    setIsPlaying(false);
+  };
 
-    if (!token || isSongLoading || currentSong?.id === nextSong.id) {
-      return;
+  const onSongResumed = () => {
+    resumeMediaSession();
+    setIsPlaying(true);
+  };
+
+  const onSongEnded = () => {
+    closeMediaSession();
+    playNextSong();
+  };
+
+  const onSongSeeking = (e: CustomEvent) => {
+    if (currentSong) {
+      updateMediaSessionPosition(e.detail as number, currentSong?.length);
     }
-
-    playSong(nextSong, "queue");
   };
 
   useEffect(() => {
@@ -110,50 +142,99 @@ export const AudioPlayer: React.FC = () => {
         .then((blob) => {
           const url = URL.createObjectURL(blob);
 
-          // Revoke old cover URL before replacing it only when the new one is
-          // loaded.
+          console.log("[AudioPlayer] fetched cover:", url);
+
+          // Revoke old cover URL before replacing it only when the new one is loaded.
           if (image) {
             URL.revokeObjectURL(image);
           }
 
-          setImage(url);
-
-          console.log("[AudioPlayer] fetched cover:", url);
+          return setImage(url);
         })
         .catch((error) => captureException(error));
     }
   }, [currentSong, token]);
 
-  // Mount events everytime store values are updated to avoid stale variables.
-  // It's a fix for the "stale closure" which captures a "snapshot" of the component
-  // state which is then passed to the event-listeners callbacks.
+  // Mount events everytime component re-render to avoid stale variables.
+  // It's a fix for the "stale closure" which captures a "snapshot" of the
+  // component state which is then passed to the event-listeners callbacks.
   useEffect(() => {
+    audioManager.on(AudioManagerEvents.LOAD_SONG, onLoadSong as EventListener);
+
     audioManager.on(
-      "updated-audio-context",
-      handleUpdatedAudioContext as EventListener
+      AudioManagerEvents.UPDATED_SONG_LOADING_PROGRESSION,
+      onSongLoadingProgression as EventListener
     );
 
     audioManager.on(
-      "updated-song-loading-progression",
-      handleSongLoadingProgression as EventListener
+      AudioManagerEvents.SONG_ENDED,
+      onSongEnded as EventListener
     );
 
-    audioManager.on("song-ended", handlePlayNextSong as EventListener);
+    audioManager.on(
+      AudioManagerEvents.SONG_PLAYING,
+      onSongPlaying as EventListener
+    );
+
+    audioManager.on(
+      AudioManagerEvents.SONG_PAUSED,
+      onSongPaused as EventListener
+    );
+
+    audioManager.on(
+      AudioManagerEvents.SONG_RESUMED,
+      onSongResumed as EventListener
+    );
+
+    audioManager.on(
+      AudioManagerEvents.SONG_SEEKING,
+      onSongSeeking as EventListener
+    );
+
+    setupMediaSessionActionHandlers({
+      pause: () => audioManager.pauseOrResume(),
+      play: () => audioManager.pauseOrResume(),
+      nexttrack: () => playNextSong(),
+      previoustrack: () => playPreviousSong(),
+    });
 
     return () => {
       audioManager.off(
-        "updated-audio-context",
-        handleUpdatedAudioContext as EventListener
+        AudioManagerEvents.LOAD_SONG,
+        onLoadSong as EventListener
       );
 
       audioManager.off(
-        "updated-song-loading-progression",
-        handleSongLoadingProgression as EventListener
+        AudioManagerEvents.UPDATED_SONG_LOADING_PROGRESSION,
+        onSongLoadingProgression as EventListener
       );
 
-      audioManager.off("song-ended", handlePlayNextSong as EventListener);
+      audioManager.off(
+        AudioManagerEvents.SONG_ENDED,
+        onSongEnded as EventListener
+      );
+
+      audioManager.off(
+        AudioManagerEvents.SONG_PLAYING,
+        onSongPlaying as EventListener
+      );
+
+      audioManager.off(
+        AudioManagerEvents.SONG_PAUSED,
+        onSongPaused as EventListener
+      );
+
+      audioManager.off(
+        AudioManagerEvents.SONG_RESUMED,
+        onSongResumed as EventListener
+      );
+
+      audioManager.off(
+        AudioManagerEvents.SONG_SEEKING,
+        onSongSeeking as EventListener
+      );
     };
-  }, [token, queue, currentSong, isSongLoading]);
+  });
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-20 flex w-full items-center justify-center border-t border-neutral-800 bg-neutral-900 px-6 py-4">
@@ -166,13 +247,12 @@ export const AudioPlayer: React.FC = () => {
 
       <div className="flex flex-col space-y-3">
         <AudioPlayerControls
-          audioContext={audioContext}
-          currentSong={currentSong}
+          isPlaying={isPlaying}
           isSongLoading={isSongLoading}
           hasPreviousSong={history.length > 0}
           hasNextSong={queue.length > 0}
-          handlePlayPreviousSong={handlePlayPreviousSong}
-          handlePlayNextSong={handlePlayNextSong}
+          handlePlayPreviousSong={playPreviousSong}
+          handlePlayNextSong={playNextSong}
         />
 
         <AudioPlayerProgressBar isSongLoading={isSongLoading} />

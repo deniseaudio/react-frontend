@@ -5,6 +5,29 @@ import type { APISong } from "@/interfaces/api.interfaces";
 import { getSongStream } from "@/api";
 import { EventEmitter } from "./EventEmitter";
 
+export enum AudioManagerEvents {
+  // Event used to signal that the audio manager should send a `LOAD_SONG`
+  // event to the React `AudioPlayer` component.
+  PREPARE_SONG = "PREPARE_SONG",
+  // Sent to `AudioPlayer` component to start the loading of the song.
+  LOAD_SONG = "LOAD_SONG",
+  // Sent when the song is loaded and buffered and `audioContext` is playing.
+  SONG_PLAYING = "SONG_PLAYING",
+  // Sent when the `audioContext` is paused.
+  SONG_PAUSED = "SONG_PAUSED",
+  // Sent when the `audioContext` is resumed.
+  SONG_RESUMED = "SONG_RESUMED",
+  // Sent when the `currentTime > song.duration.length`.
+  SONG_ENDED = "SONG_ENDED",
+  // Sent when seeking into the song.
+  SONG_SEEKING = "SONG_SEEKING",
+  // Event emitted when loading a chunk of the song.
+  UPDATED_SONG_LOADING_PROGRESSION = "UPDATED_SONG_LOADING_PROGRESSION",
+  // Sent when the current time is updated, called in a loop x times per seconds.
+  // Used to keep track of the song current-time position.
+  CURRENT_TIME_UPDATED = "CURRENT_TIME_UPDATED",
+}
+
 // eslint-disable-next-line unicorn/prefer-event-target
 class AudioManager extends EventEmitter {
   private audioContext: AudioContext | null = null;
@@ -29,15 +52,28 @@ class AudioManager extends EventEmitter {
   /** Volume gain node value. */
   private volumeGainNodeValue: number = 0.5;
 
+  constructor() {
+    super();
+
+    // When receiving `PREPARE_SONG` event, send it right away to the
+    // `AudioPlayer` React component by emitting `LOAD_SONG` event.
+    this.on(
+      AudioManagerEvents.PREPARE_SONG,
+      // @ts-ignore
+      (e: CustomEvent) => this.emit(AudioManagerEvents.LOAD_SONG, e.detail)
+    );
+  }
+
   /** Retrieve the AudioContext. */
   public getAudioContext() {
     return this.audioContext;
   }
 
-  /** Set the `audioContext`, emit `"updated-audio-context" event.` */
+  /**
+   * Set the `audioContext`.
+   */
   public setAudioContext(audioContext: AudioContext | null) {
     this.audioContext = audioContext;
-    this.emit("updated-audio-context", this.audioContext);
   }
 
   /** Retrieve the AudioBufferSourceNode. */
@@ -95,7 +131,7 @@ class AudioManager extends EventEmitter {
       1000 / 30
     );
 
-    this.emit("song-playing", song);
+    this.emit(AudioManagerEvents.SONG_PLAYING, song);
   }
 
   /**
@@ -183,6 +219,24 @@ class AudioManager extends EventEmitter {
         () => this.currentTimeLoop(),
         1000 / 5
       );
+
+      this.emit(AudioManagerEvents.SONG_SEEKING, time);
+    }
+  }
+
+  /**
+   * Depending on the `audioContext.state`, pause or resume the current song.
+   * Emit an event if a pause of resume is performed.
+   */
+  public pauseOrResume() {
+    if (this.audioContext && this.audioBufferSource && this.song) {
+      if (this.audioContext.state === "running") {
+        this.audioContext.suspend().catch((error) => captureException(error));
+        this.emit(AudioManagerEvents.SONG_PAUSED, this.song);
+      } else if (this.audioContext.state === "suspended") {
+        this.audioContext.resume().catch((error) => captureException(error));
+        this.emit(AudioManagerEvents.SONG_RESUMED, this.song);
+      }
     }
   }
 
@@ -219,7 +273,7 @@ class AudioManager extends EventEmitter {
       chunks.push(value);
       receivedLength += value.length;
 
-      this.emit("updated-song-loading-progression", {
+      this.emit(AudioManagerEvents.UPDATED_SONG_LOADING_PROGRESSION, {
         contentLength,
         receivedLength,
       });
@@ -295,7 +349,7 @@ class AudioManager extends EventEmitter {
         this.currentTime / 1000 >= this.song.length
       ) {
         window.clearInterval(this.currentTimeInterval);
-        this.emit("song-ended", this.song);
+        this.emit(AudioManagerEvents.SONG_ENDED, this.song);
         return;
       }
 
@@ -307,7 +361,7 @@ class AudioManager extends EventEmitter {
       this.currentTime += delta;
       this.currentTimeLastUpdate = now;
 
-      this.emit("current-time-updated", this.currentTime);
+      this.emit(AudioManagerEvents.CURRENT_TIME_UPDATED, this.currentTime);
     }
     // When audio-context is suspended, make sure to keep up with the last
     // updated time.

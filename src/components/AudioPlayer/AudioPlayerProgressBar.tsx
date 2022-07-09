@@ -3,7 +3,7 @@ import ReactInputSlider from "react-input-slider";
 import { addSeconds, format } from "date-fns";
 
 import type { APISong } from "@/interfaces/api.interfaces";
-import { audioManager } from "@/lib/AudioManager";
+import { AudioManagerEvents, audioManager } from "@/lib/AudioManager";
 
 export type AudioPlayerProgressBarProps = {
   isSongLoading: boolean;
@@ -57,20 +57,25 @@ export const AudioPlayerProgressBar: React.FC<AudioPlayerProgressBarProps> = ({
   };
 
   // When playing a song, reset current time and set song duration.
-  // In case the component is unmounted, make sure to remove the event listeners.
   useEffect(() => {
-    audioManager.on("song-playing", resetSongHandler as EventListener);
+    audioManager.on(
+      AudioManagerEvents.SONG_PLAYING,
+      resetSongHandler as EventListener
+    );
 
     audioManager.on(
-      "current-time-updated",
+      AudioManagerEvents.CURRENT_TIME_UPDATED,
       currentTimeUpdatedHandler as EventListener
     );
 
     return () => {
-      audioManager.off("song-playing", resetSongHandler as EventListener);
+      audioManager.off(
+        AudioManagerEvents.SONG_PLAYING,
+        resetSongHandler as EventListener
+      );
 
       audioManager.off(
-        "current-time-updated",
+        AudioManagerEvents.CURRENT_TIME_UPDATED,
         currentTimeUpdatedHandler as EventListener
       );
     };

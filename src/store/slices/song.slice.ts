@@ -1,15 +1,15 @@
 import type { APISong } from "@/interfaces/api.interfaces";
-import type { SongProgression } from "@/interfaces/song.interfaces";
+import {
+  type SongProgression,
+  SongInitiatorTypes,
+} from "@/interfaces/song.interfaces";
 import type { StoreSlice } from "../store";
 
 export type SongSlice = {
   currentSong: APISong | null;
   isSongLoading: boolean;
   songLoadingProgression: SongProgression | null;
-  loadSong: (
-    song: APISong,
-    initiator: "library-browser" | "queue" | "history"
-  ) => void;
+  loadSong: (song: APISong, initiator: SongInitiatorTypes) => void;
   loadSongSuccess: () => void;
   loadSongFailed: () => void;
   loadSongProgression: (progression: SongProgression) => void;
@@ -24,18 +24,18 @@ export const createSongSlice: StoreSlice<SongSlice> = (set, get) => ({
     const { currentSong, history } = get();
 
     // Push songs to the history only if they are not played from the "back" button.
-    if (currentSong && initiator !== "history") {
+    if (currentSong && initiator !== SongInitiatorTypes.HISTORY) {
       set(() => ({ history: [currentSong, ...history] }));
     }
 
     // If playing from the "next" button or auto-play queue, remove the first song
     // from the queue.
-    if (initiator === "queue") {
+    if (initiator === SongInitiatorTypes.QUEUE) {
       set(() => ({ queue: [...get().queue].slice(1) }));
     }
 
     // if playing from the "back" button, remove the last song from the history.
-    if (initiator === "history") {
+    if (initiator === SongInitiatorTypes.HISTORY) {
       set(() => ({ history: [...history].slice(1) }));
     }
 

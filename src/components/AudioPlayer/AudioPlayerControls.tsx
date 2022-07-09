@@ -1,51 +1,31 @@
-import React, { useEffect, useState } from "react";
-import { captureException } from "@sentry/react";
 import { PlayIcon, PauseIcon } from "@heroicons/react/solid";
 
-import type { APISong } from "@/interfaces/api.interfaces";
+import { audioManager } from "@/lib/AudioManager";
 import { ReactComponent as PlayPreviousIcon } from "@/assets/icons/play-previous.svg";
 import { ReactComponent as PlayNextIcon } from "@/assets/icons/play-next.svg";
 
 const cx = (classes: string[]) => classes.join(" ");
 
 export type AudioPlayerControlsProps = {
+  isPlaying: boolean;
   isSongLoading: boolean;
   hasPreviousSong: boolean;
   hasNextSong: boolean;
-  currentSong: APISong | null;
-  audioContext: AudioContext | null;
   handlePlayPreviousSong: () => void;
   handlePlayNextSong: () => void;
 };
 
 export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({
+  isPlaying,
   isSongLoading,
   hasPreviousSong,
   hasNextSong,
-  currentSong,
-  audioContext,
   handlePlayPreviousSong,
   handlePlayNextSong,
 }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  const handleResumePause = () => {
-    if (!currentSong || !audioContext) {
-      return;
-    }
-
-    if (audioContext.state === "running") {
-      audioContext.suspend().catch((error) => captureException(error));
-      setIsPlaying(false);
-    } else if (audioContext.state === "suspended") {
-      audioContext.resume().catch((error) => captureException(error));
-      setIsPlaying(true);
-    }
+  const onResumeOrPause = () => {
+    audioManager.pauseOrResume();
   };
-
-  useEffect(() => {
-    setIsPlaying(audioContext?.state === "running" || false);
-  }, [audioContext]);
 
   return (
     <div className="flex flex-1 items-center justify-center">
@@ -71,7 +51,7 @@ export const AudioPlayerControls: React.FC<AudioPlayerControlsProps> = ({
             ? "cursor-not-allowed text-opacity-50"
             : "cursor-pointer text-opacity-100",
         ])}
-        onClick={() => handleResumePause()}
+        onClick={onResumeOrPause}
         disabled={isSongLoading}
       >
         {isPlaying ? (
