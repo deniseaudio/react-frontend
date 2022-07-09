@@ -11,7 +11,7 @@ export type AuthSlice = {
 export const createAuthSlice: StoreSlice<AuthSlice> = (set) => ({
   user: null,
   token: null,
-  login: (token, user) => set(() => ({ token, user })),
+  login: (token, user) => set(() => ({ token, user, likes: user.likes })),
   logout: () =>
     set(() => ({
       token: null,
@@ -20,5 +20,6 @@ export const createAuthSlice: StoreSlice<AuthSlice> = (set) => ({
       currentSong: null,
       isSongLoading: false,
       songLoadingProgression: null,
+      likes: [],
     })),
 });

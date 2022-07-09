@@ -76,3 +76,14 @@ export const getSongCover = (songId: string, token: string) => {
     },
   }).then((response) => response.blob());
 };
+
+export const postSongLike = (userId: string, songId: string, token: string) => {
+  return fetch(`${API_URL}/api/user/like`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ userId, songId }),
+  }).then((response) => convertResponse<{ likes: string[] }>(response));
+};

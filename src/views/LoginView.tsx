@@ -9,6 +9,7 @@ import { RegisterForm } from "@/components/Register/RegisterForm";
 
 export const LoginView: React.FC = () => {
   const login = useStore((state) => state.login);
+
   const navigate = useNavigate();
 
   const [displayLogin, setDisplayLogin] = useState(true);

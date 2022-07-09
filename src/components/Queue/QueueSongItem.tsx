@@ -1,10 +1,13 @@
+import { useState } from "react";
 import cx from "classnames";
 import { addSeconds, format } from "date-fns";
+import { HeartIcon } from "@heroicons/react/outline";
 import { PlayIcon, MinusCircleIcon } from "@heroicons/react/solid";
 import { captureException } from "@sentry/react";
 
 import type { APISong } from "@/interfaces/api.interfaces";
 import { SongInitiatorTypes } from "@/interfaces/song.interfaces";
+import { postSongLike } from "@/api";
 import { useStore } from "@/store/store";
 import { AudioManagerEvents, audioManager } from "@/lib/AudioManager";
 
@@ -15,10 +18,16 @@ export type SongListItemProps = {
 
 export const QueueSongItem: React.FC<SongListItemProps> = ({ song, index }) => {
   const token = useStore((state) => state.token);
+  const user = useStore((state) => state.user);
+  const likes = useStore((state) => state.likes);
+  const updateLikes = useStore((state) => state.updateLikes);
   const queue = useStore((state) => state.queue);
   const updateQueue = useStore((state) => state.updateQueue);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const isCurrentSong = index === 0;
+  const isLiked = likes.includes(song.id);
 
   const playQueueItem = () => {
     if (!token) {
@@ -37,6 +46,22 @@ export const QueueSongItem: React.FC<SongListItemProps> = ({ song, index }) => {
 
   const removeQueueItem = () => {
     updateQueue([...queue].filter((_, i) => i !== index - 1));
+  };
+
+  const onSongLike = () => {
+    if (!isLoading && token && user && user.id) {
+      setIsLoading(true);
+
+      postSongLike(user.id, song.id, token)
+        .then(({ data }) => {
+          setIsLoading(false);
+          return updateLikes(data.likes);
+        })
+        .catch((error) => {
+          setIsLoading(false);
+          captureException(error);
+        });
+    }
   };
 
   return (
@@ -75,6 +100,24 @@ export const QueueSongItem: React.FC<SongListItemProps> = ({ song, index }) => {
       </div>
 
       <div className="ml-auto flex items-center justify-center">
+        <button
+          type="button"
+          className={cx([
+            "mr-4",
+            isLiked
+              ? "text-green-500"
+              : "hidden text-neutral-400 group-hover:block",
+          ])}
+          onClick={onSongLike}
+        >
+          <HeartIcon
+            className={cx([
+              "h-auto w-5",
+              isLiked ? "fill-green-500" : "hover:fill-neutral-400",
+            ])}
+          />
+        </button>
+
         <p className="overflow-hidden text-ellipsis font-mono text-sm font-medium leading-snug text-neutral-400">
           {format(addSeconds(new Date(0), song.length), "m:ss")}
         </p>
