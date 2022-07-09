@@ -18,7 +18,7 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 h-20 w-full border-b border-neutral-800 bg-neutral-900 pl-72">
+    <nav className="fixed top-0 left-0 right-0 h-20 w-full border-b border-neutral-800 bg-neutral-900 pl-64">
       <div className="relative flex h-full w-full items-center justify-end px-8">
         <Button
           type="button"
