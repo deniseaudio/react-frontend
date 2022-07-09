@@ -2,10 +2,11 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 import { DefaultLayout } from "@/layouts/DefaultLayout";
+import { RequireAuth } from "@/components/RequireAuth";
 import { LoginView } from "@/views/LoginView";
 import { AudioPlayerView } from "@/views/AudioPlayerView";
 import { QueueView } from "@/views/QueueView";
-import { RequireAuth } from "@/components/RequireAuth";
+import { LikesView } from "@/views/LikesView";
 
 export const App: React.FC = () => {
   return (
@@ -27,6 +28,15 @@ export const App: React.FC = () => {
           element={
             <RequireAuth>
               <QueueView />
+            </RequireAuth>
+          }
+        />
+
+        <Route
+          path="likes"
+          element={
+            <RequireAuth>
+              <LikesView />
             </RequireAuth>
           }
         />

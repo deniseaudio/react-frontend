@@ -2,6 +2,7 @@ import type {
   APIDirectory,
   APIRootDirectory,
   APIUser,
+  APISong,
 } from "@/interfaces/api.interfaces";
 
 const API_URL = import.meta.env.PROD
@@ -86,4 +87,13 @@ export const postSongLike = (userId: string, songId: string, token: string) => {
     },
     body: JSON.stringify({ userId, songId }),
   }).then((response) => convertResponse<{ likes: string[] }>(response));
+};
+
+export const getLikesAsSongs = (userId: string, token: string) => {
+  return fetch(`${API_URL}/api/user/likes-as-songs?userId=${userId}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => convertResponse<APISong[]>(response));
 };
