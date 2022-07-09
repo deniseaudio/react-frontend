@@ -2,6 +2,7 @@ export type APIUser = {
   id: string;
   username: string;
   email: string;
+  likes: string[];
 };
 
 export type APIArtist = {
