@@ -1,8 +1,15 @@
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
+import cx from "classnames";
+import { HeartIcon } from "@heroicons/react/outline";
+import { captureException } from "@sentry/react";
 
+import type { APISong } from "@/interfaces/api.interfaces";
 import type { SongProgression } from "@/interfaces/song.interfaces";
+import { postSongLike } from "@/api";
+import { useStore } from "@/store/store";
 
 export type AudioPlayerTrackInfoProps = {
+  song: APISong | null;
   imageUrl?: string;
   title: string;
   artist: string;
@@ -10,11 +17,21 @@ export type AudioPlayerTrackInfoProps = {
 };
 
 export const AudioPlayerTrackInfo: React.FC<AudioPlayerTrackInfoProps> = ({
+  song,
   artist,
   imageUrl,
   title,
   songProgression,
 }) => {
+  const token = useStore((state) => state.token);
+  const user = useStore((state) => state.user);
+  const likes = useStore((state) => state.likes);
+  const updateLikes = useStore((state) => state.updateLikes);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const isLiked = song ? likes.includes(song.id) : false;
+
   const loadingPercentage = useMemo(
     () =>
       songProgression
@@ -29,6 +46,22 @@ export const AudioPlayerTrackInfo: React.FC<AudioPlayerTrackInfoProps> = ({
     () => loadingPercentage >= 100,
     [loadingPercentage]
   );
+
+  const onSongLike = () => {
+    if (!isLoading && token && user && user.id) {
+      setIsLoading(true);
+
+      postSongLike(user.id, song.id, token)
+        .then(({ data }) => {
+          setIsLoading(false);
+          return updateLikes(data.likes);
+        })
+        .catch((error) => {
+          setIsLoading(false);
+          captureException(error);
+        });
+    }
+  };
 
   return (
     <div className="flex flex-1 justify-start">
@@ -63,6 +96,22 @@ export const AudioPlayerTrackInfo: React.FC<AudioPlayerTrackInfoProps> = ({
           </p>
         ) : null}
       </div>
+
+      <button
+        type="button"
+        className={cx([
+          "ml-6",
+          isLiked ? "text-green-500" : "text-neutral-400",
+        ])}
+        onClick={onSongLike}
+      >
+        <HeartIcon
+          className={cx([
+            "h-auto w-5",
+            isLiked ? "fill-green-500" : "hover:fill-neutral-400",
+          ])}
+        />
+      </button>
     </div>
   );
 };

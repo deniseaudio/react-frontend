@@ -239,6 +239,7 @@ export const AudioPlayer: React.FC = () => {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-20 flex w-full items-center justify-center border-t border-neutral-800 bg-neutral-900 px-6 py-4">
       <AudioPlayerTrackInfo
+        song={currentSong}
         imageUrl={image}
         artist={currentSong?.artist.name || "Not playing..."}
         title={currentSong?.title || ""}
