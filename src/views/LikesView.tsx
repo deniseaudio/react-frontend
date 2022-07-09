@@ -45,7 +45,7 @@ export const LikesView: React.FC = () => {
             </div>
           </>
         ) : (
-          <p className="mb-4 font-metropolis text-lg font-medium leading-tight text-neutral-400">
+          <p className="font-metropolis text-lg font-medium leading-tight text-neutral-400">
             Loading...
           </p>
         )}
