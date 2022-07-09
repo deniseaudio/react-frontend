@@ -48,7 +48,7 @@ export const AudioPlayerTrackInfo: React.FC<AudioPlayerTrackInfoProps> = ({
   );
 
   const onSongLike = () => {
-    if (!isLoading && token && user && user.id) {
+    if (!isLoading && token && song && user && user.id) {
       setIsLoading(true);
 
       postSongLike(user.id, song.id, token)
