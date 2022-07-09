@@ -28,7 +28,7 @@ export const SongNode: React.FC<SongNodeProps> = ({ song, directorySongs }) => {
       (s) => !queue.some((q) => q.id === s.id)
     );
 
-    updateQueue([...queue, ...noDuplicatesSongsToQueue]);
+    updateQueue([...noDuplicatesSongsToQueue, ...queue]);
   };
 
   /**
