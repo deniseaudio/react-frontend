@@ -3,31 +3,18 @@ import { captureException } from "@sentry/react";
 
 import type { APISong } from "@/interfaces/api.interfaces";
 import { useStore } from "@/store/store";
-import { postSongLike, getLikesAsSongs } from "@/api";
-import { LikeSongItem } from "@/components/Likes/LikeSongItem";
+import { getLikesAsSongs } from "@/api";
+import { SongItem } from "@/components/Song/SongItem";
 
 export const LikesView: React.FC = () => {
   const token = useStore((state) => state.token);
   const user = useStore((state) => state.user);
 
-  const [isLoading, setIsLoading] = useState(false);
   const [hasFetched, setHasFetched] = useState(false);
   const [likedSongs, setLikedSongs] = useState<APISong[]>([]);
 
-  const onUnlike = (song: APISong) => {
-    if (!isLoading && user && user.id && token) {
-      setIsLoading(true);
-
-      postSongLike(user.id, song.id, token)
-        .then(() => {
-          setIsLoading(false);
-          return setHasFetched(false);
-        })
-        .catch((error) => {
-          setIsLoading(true);
-          captureException(error);
-        });
-    }
+  const onLikeUpdate = () => {
+    setHasFetched(false);
   };
 
   useEffect(() => {
@@ -63,11 +50,11 @@ export const LikesView: React.FC = () => {
 
             <div className="flex flex-col">
               {likedSongs.map((song, index) => (
-                <LikeSongItem
+                <SongItem
                   key={song.id}
                   song={song}
                   index={index}
-                  onUnlike={onUnlike}
+                  onLikeUpdate={onLikeUpdate}
                 />
               ))}
             </div>

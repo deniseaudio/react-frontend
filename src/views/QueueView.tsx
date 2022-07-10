@@ -2,7 +2,7 @@ import React from "react";
 import cx from "classnames";
 
 import { useStore } from "@/store/store";
-import { QueueSongItem } from "@/components/Queue/QueueSongItem";
+import { SongQueueItem } from "@/components/Song/SongQueueItem";
 
 export const QueueView: React.FC = () => {
   const queue = useStore((state) => state.queue);
@@ -22,7 +22,7 @@ export const QueueView: React.FC = () => {
           {currentSong ? "Now playing" : "No song playing"}
         </p>
 
-        {currentSong ? <QueueSongItem song={currentSong} index={0} /> : null}
+        {currentSong ? <SongQueueItem song={currentSong} index={0} /> : null}
 
         {queue.length > 0 ? (
           <p className="mt-8 mb-4 font-metropolis text-lg font-medium leading-tight text-neutral-400">
@@ -32,7 +32,7 @@ export const QueueView: React.FC = () => {
 
         <div className="flex flex-col">
           {queue.map((song, index) => (
-            <QueueSongItem key={song.id} song={song} index={index + 1} />
+            <SongQueueItem key={song.id} song={song} index={index + 1} />
           ))}
         </div>
       </div>

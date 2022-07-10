@@ -7,6 +7,7 @@ import { LoginView } from "@/views/LoginView";
 import { AudioPlayerView } from "@/views/AudioPlayerView";
 import { QueueView } from "@/views/QueueView";
 import { LikesView } from "@/views/LikesView";
+import { HistoryView } from "@/views/HistoryView";
 
 export const App: React.FC = () => {
   return (
@@ -37,6 +38,15 @@ export const App: React.FC = () => {
           element={
             <RequireAuth>
               <LikesView />
+            </RequireAuth>
+          }
+        />
+
+        <Route
+          path="history"
+          element={
+            <RequireAuth>
+              <HistoryView />
             </RequireAuth>
           }
         />
