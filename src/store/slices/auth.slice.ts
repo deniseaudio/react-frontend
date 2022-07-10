@@ -21,5 +21,6 @@ export const createAuthSlice: StoreSlice<AuthSlice> = (set) => ({
       isSongLoading: false,
       songLoadingProgression: null,
       likes: [],
+      history: [],
     })),
 });
