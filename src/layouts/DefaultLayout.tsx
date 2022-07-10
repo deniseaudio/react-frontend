@@ -3,7 +3,7 @@ import { Outlet, useLocation } from "react-router-dom";
 
 import { Navbar } from "@/components/Navbar";
 import { Sidebar } from "@/components/Sidebar";
-import { AudioPlayer } from "@/components/AudioPlayer";
+import { AudioPlayer } from "@/components/AudioPlayer/AudioPlayer";
 
 /**
  * Default layout for the app. Contains a navbar and audio-player that will be
