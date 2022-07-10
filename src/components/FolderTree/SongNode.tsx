@@ -1,5 +1,5 @@
 import React from "react";
-import { MusicNoteIcon } from "@heroicons/react/solid";
+import { MusicNoteIcon, PlusCircleIcon } from "@heroicons/react/solid";
 
 import { APISong } from "@/interfaces/api.interfaces";
 import { SongInitiatorTypes } from "@/interfaces/song.interfaces";
@@ -36,7 +36,7 @@ export const SongNode: React.FC<SongNodeProps> = ({ song, directorySongs }) => {
    * `AudioManager` in order to start the song loading process in the
    * `AudioPlayer` component.
    */
-  const playSong = () => {
+  const onPlaySong = () => {
     addSongsToQueue(song.id);
 
     audioManager.emit(AudioManagerEvents.PREPARE_SONG, {
@@ -45,9 +45,24 @@ export const SongNode: React.FC<SongNodeProps> = ({ song, directorySongs }) => {
     });
   };
 
+  const onAddToQueue: React.MouseEventHandler<HTMLOrSVGElement> = (event) => {
+    event.stopPropagation();
+    updateQueue([song, ...queue]);
+  };
+
   return (
-    <button type="button" className="flex items-center" onClick={playSong}>
+    <button
+      type="button"
+      className="group flex items-center"
+      onClick={onPlaySong}
+    >
+      <PlusCircleIcon
+        className="mr-2 hidden h-auto w-4 group-hover:block"
+        onClick={onAddToQueue}
+      />
+
       <MusicNoteIcon className="mr-2 h-auto w-4" />
+
       <p>{song.filename}</p>
     </button>
   );
