@@ -11,9 +11,14 @@ import { AudioManagerEvents, audioManager } from "@/lib/AudioManager";
 export type LikeSongItemProps = {
   song: APISong;
   index: number;
+  onUnlike: (song: APISong) => void;
 };
 
-export const LikeSongItem: React.FC<LikeSongItemProps> = ({ song, index }) => {
+export const LikeSongItem: React.FC<LikeSongItemProps> = ({
+  song,
+  index,
+  onUnlike,
+}) => {
   const token = useStore((state) => state.token);
 
   const playLikeItem = () => {
@@ -57,7 +62,9 @@ export const LikeSongItem: React.FC<LikeSongItemProps> = ({ song, index }) => {
       </div>
 
       <div className="ml-auto flex items-center justify-center">
-        <HeartIcon className=" mr-4 h-auto w-5 fill-green-500 text-green-500" />
+        <button type="button" onClick={() => onUnlike(song)}>
+          <HeartIcon className="mr-4 h-auto w-5 fill-green-500 text-green-500" />
+        </button>
 
         <p className="overflow-hidden text-ellipsis font-mono text-sm font-medium leading-snug text-neutral-400">
           {format(addSeconds(new Date(0), song.length), "m:ss")}
