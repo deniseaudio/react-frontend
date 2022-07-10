@@ -5,7 +5,6 @@ import {
   CollectionIcon,
   HeartIcon,
   HomeIcon,
-  ViewListIcon,
   UserIcon,
 } from "@heroicons/react/outline";
 
@@ -28,11 +27,6 @@ export const Sidebar: React.FC = () => {
       to: "/likes",
       name: "Likes",
       icon: <HeartIcon className="mr-3 h-auto w-5" />,
-    },
-    {
-      to: "/playlists",
-      name: "Playlists",
-      icon: <ViewListIcon className="mr-3 h-auto w-5" />,
     },
     {
       to: "/queue",
