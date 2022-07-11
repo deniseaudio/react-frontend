@@ -5,12 +5,17 @@ import { QueueSlice, createQueueSlice } from "./slices/queue.slice";
 import { SongSlice, createSongSlice } from "./slices/song.slice";
 import { HistorySlice, createHistorySlice } from "./slices/history.slice";
 import { LikeSlice, createLikeSlice } from "./slices/likes.slice";
+import {
+  DirectoriesSlice,
+  createDirectoriesSlice,
+} from "./slices/directories.slice";
 
 export type StoreState = AuthSlice &
   QueueSlice &
   SongSlice &
   HistorySlice &
-  LikeSlice;
+  LikeSlice &
+  DirectoriesSlice;
 
 export type StoreSlice<T> = (
   set: SetState<StoreState>,
@@ -23,4 +28,5 @@ export const useStore = create<StoreState>((set, get) => ({
   ...createSongSlice(set, get),
   ...createHistorySlice(set, get),
   ...createLikeSlice(set, get),
+  ...createDirectoriesSlice(set, get),
 }));

@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import shallow from "zustand/shallow";
 import { CollectionIcon } from "@heroicons/react/solid";
 import { captureException } from "@sentry/react";
 
@@ -14,40 +13,28 @@ import { TreeNode } from "./TreeNode";
 
 export type FolderTreeProps = {
   rootDirectory: APIRootDirectory;
-  className?: string;
+  openedDirectories: string[];
+  setOpenedDirectories: (openedDirectories: string[]) => void;
 };
 
-export const FolderTree: React.FC<FolderTreeProps> = ({ rootDirectory }) => {
-  const { token } = useStore((state) => ({ token: state.token }), shallow);
-
-  const [foldersOpened, setFoldersOpened] = useState<string[]>([]);
+export const FolderTree: React.FC<FolderTreeProps> = ({
+  rootDirectory,
+  openedDirectories,
+  setOpenedDirectories,
+}) => {
+  const token = useStore((state) => state.token);
+  const directories = useStore((state) => state.directories);
+  const setDirectories = useStore((state) => state.updateDirectories);
 
   // Top-level directories are directories with no parent.
   // They are the first folders relative to the root directory.
   const [topLevelDirectory, setTopLevelDirectory] =
     useState<APIDirectory | null>(null);
 
-  // Fetched directories are directories with a parent.
-  const [fetchedDirectories, setFetchedDirectories] = useState<APIDirectory[]>(
-    []
-  );
-
-  // Ordered directories means it's a directory tree from the top-level
-  // directory. Each directory have its children mapped.
-  const [orderedDirectories, setOrderedDirectories] = useState<
-    OrderedDirectory[]
-  >([]);
-
-  // Keep a reference of fetched directories to avoid re-fetching them.
-  const fetchedDirectoriesIds = useMemo(
-    () => fetchedDirectories.map((dir) => dir.id),
-    [fetchedDirectories]
-  );
-
   const fetchDirectory = (parentDirectoryId: string, topLevel = false) => {
     // Don't fetch directory if it has already been fetched or if it's not a
     // top-level directory.
-    if (!topLevel && fetchedDirectoriesIds.includes(parentDirectoryId)) {
+    if (!topLevel && directories.some((dir) => dir.id === parentDirectoryId)) {
       return;
     }
 
@@ -55,30 +42,35 @@ export const FolderTree: React.FC<FolderTreeProps> = ({ rootDirectory }) => {
       getDirectoryContent(token, parentDirectoryId)
         .then(({ response, data }) => {
           if (response.ok && data.directory) {
+            // Top-level directories are not stored globally, as we don't need
+            // to cache them.
             if (topLevel) {
               setTopLevelDirectory(data.directory);
-              setFetchedDirectories(() => [data.directory]);
             } else {
-              setFetchedDirectories((value) => [...value, data.directory]);
+              setDirectories([...directories, data.directory]);
             }
           }
+
+          return { response, data };
         })
         .catch((error) => captureException(error));
     }
   };
 
   const toggleFolderState = (directoryId: string) => {
-    if (!foldersOpened.includes(directoryId)) {
-      setFoldersOpened([...foldersOpened, directoryId]);
+    if (!openedDirectories.includes(directoryId)) {
+      setOpenedDirectories([...openedDirectories, directoryId]);
       fetchDirectory(directoryId);
     } else {
-      setFoldersOpened([...foldersOpened.filter((id) => id !== directoryId)]);
+      setOpenedDirectories([
+        ...openedDirectories.filter((id) => id !== directoryId),
+      ]);
     }
   };
 
   const orderDirectory = (
     directory: { id: string; name: string },
-    directories: APIDirectory[]
+    dirs: APIDirectory[]
   ) => {
     const orderedDirectory: OrderedDirectory = {
       ...directory,
@@ -86,13 +78,13 @@ export const FolderTree: React.FC<FolderTreeProps> = ({ rootDirectory }) => {
       children: [],
     };
 
-    const matched = directories.find((dir) => directory.id === dir.id);
+    const matched = dirs.find((dir) => directory.id === dir.id);
 
     if (matched) {
       orderedDirectory.songs = [...matched.songs];
       orderedDirectory.children = [
         ...matched.children.map((childDir) =>
-          orderDirectory(childDir, fetchedDirectories)
+          orderDirectory(childDir, directories)
         ),
       ];
     }
@@ -100,28 +92,22 @@ export const FolderTree: React.FC<FolderTreeProps> = ({ rootDirectory }) => {
     return orderedDirectory;
   };
 
-  // On mount, fetch directory content of the root directory.
+  const orderedDirectories = useMemo<OrderedDirectory[]>(() => {
+    if (topLevelDirectory?.children.length) {
+      return topLevelDirectory.children.map((childDir) =>
+        orderDirectory(childDir, directories)
+      );
+    }
+
+    return [];
+  }, [topLevelDirectory, directories]);
+
+  // On mount, always fetch the top-level directory even if it's cached.
   useEffect(() => {
     if (token) {
-      setTopLevelDirectory(null);
-      setFoldersOpened([]);
       fetchDirectory(rootDirectory.id, true);
     }
   }, []);
-
-  // When top-level directory or any directory is fetched, re-order directories.
-  useEffect(() => {
-    if (topLevelDirectory?.children.length && fetchedDirectories.length > 0) {
-      setOrderedDirectories([]);
-
-      topLevelDirectory.children.forEach((child) => {
-        setOrderedDirectories((value) => [
-          ...value,
-          orderDirectory(child, fetchedDirectories),
-        ]);
-      });
-    }
-  }, [fetchedDirectories, topLevelDirectory]);
 
   return (
     <>
@@ -135,7 +121,7 @@ export const FolderTree: React.FC<FolderTreeProps> = ({ rootDirectory }) => {
           <TreeNode
             key={`node-${directory.id}`}
             directory={directory}
-            foldersOpened={foldersOpened}
+            foldersOpened={openedDirectories}
             toggleFolderState={toggleFolderState}
           />
         ))}
