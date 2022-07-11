@@ -1,7 +1,8 @@
 import React, { useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { CollectionIcon } from "@heroicons/react/solid";
 import cx from "classnames";
+
+import { ReactComponent as QueueIcon } from "@/assets/icons/queue.svg";
 
 export const AudioPlayerQueue: React.FC = () => {
   const location = useLocation();
@@ -22,9 +23,9 @@ export const AudioPlayerQueue: React.FC = () => {
 
   return (
     <div className="mr-4 flex flex-col items-center">
-      <CollectionIcon
+      <QueueIcon
         className={cx(
-          "h-5 w-5 cursor-pointer transition-colors duration-150 ease-in-out hover:text-neutral-50",
+          "h-4 w-auto cursor-pointer transition-colors duration-150 ease-in-out hover:text-neutral-50",
           isInQueueRoute ? "text-neutral-50" : "text-neutral-400"
         )}
         onClick={handleClick}

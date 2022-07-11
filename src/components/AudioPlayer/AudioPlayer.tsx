@@ -242,7 +242,7 @@ export const AudioPlayer: React.FC = () => {
   });
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-20 flex w-full items-center justify-center border-t border-neutral-800 bg-neutral-900 px-6 py-4">
+    <div className="fixed bottom-0 left-0 right-0 z-20 flex h-24 w-full items-center justify-center border-t border-neutral-800 bg-neutral-900 px-6 py-4">
       <AudioPlayerTrackInfo
         song={currentSong}
         imageUrl={image}
@@ -251,7 +251,7 @@ export const AudioPlayer: React.FC = () => {
         songProgression={songLoadingProgression}
       />
 
-      <div className="flex flex-col space-y-3">
+      <div className="flex flex-col space-y-2">
         <AudioPlayerControls
           isPlaying={isPlaying}
           isSongLoading={isSongLoading}

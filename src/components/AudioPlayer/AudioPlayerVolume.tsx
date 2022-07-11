@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { VolumeUpIcon } from "@heroicons/react/solid";
+import { useState } from "react";
 import ReactInputSlider from "react-input-slider";
 
 import { audioManager } from "@/lib/AudioManager";
+import { ReactComponent as VolumeIcon } from "@/assets/icons/volume.svg";
 
 export const AudioPlayerVolume: React.FC = () => {
   // Visual UI state.
@@ -14,8 +14,8 @@ export const AudioPlayerVolume: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-end text-neutral-50">
-      <VolumeUpIcon className="mr-4 h-5 w-5" />
+    <div className="flex items-center justify-end text-neutral-400">
+      <VolumeIcon className="mr-4 h-4 w-4" />
 
       <ReactInputSlider
         axis="x"

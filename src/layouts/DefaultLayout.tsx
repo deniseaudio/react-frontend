@@ -17,7 +17,7 @@ export const DefaultLayout: React.FC = () => {
       <Sidebar />
       <Navbar />
 
-      <main className="max-h-[calc(100vh-108px)] overflow-y-auto pt-20 pl-64">
+      <main className="max-h-[calc(100vh-96px)] overflow-y-auto pt-20 pl-64">
         <div className="px-8 pt-12">
           <Outlet />
         </div>

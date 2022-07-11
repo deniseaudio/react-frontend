@@ -116,7 +116,7 @@ export const AudioPlayerProgressBar: React.FC<AudioPlayerProgressBarProps> = ({
             height: "12px",
             backgroundColor: "#fafafa",
           },
-          active: { backgroundColor: "#22c55e" },
+          active: { backgroundColor: "#fff" },
         }}
       />
 
