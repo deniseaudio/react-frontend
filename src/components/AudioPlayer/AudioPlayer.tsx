@@ -78,9 +78,14 @@ export const AudioPlayer: React.FC = () => {
   };
 
   const playNextSong = () => {
-    const nextSong = queue[0];
+    const nextSong = queue[0] as APISong | undefined;
 
-    if (!token || isSongLoading || currentSong?.id === nextSong.id) {
+    if (
+      !token ||
+      !nextSong ||
+      isSongLoading ||
+      currentSong?.id === nextSong.id
+    ) {
       return;
     }
 
