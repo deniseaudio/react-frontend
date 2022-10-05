@@ -1,8 +1,8 @@
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "user": {
+  "data": {
     "id": "e2b706c0-5def-4e7c-b05f-2ba7de8b7dc0",
     "email": "test@example.com",
-    "username": "Cypress Testing"
+    "username": "Cypress Testing",
+    "likes": []
   }
 }

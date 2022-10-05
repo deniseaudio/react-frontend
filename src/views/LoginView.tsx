@@ -26,7 +26,7 @@ export const LoginView: React.FC = () => {
       setIsLoading(false);
 
       if (response.ok && data) {
-        login(data.token, data.user);
+        login(data);
         navigate("/audio-player");
       } else {
         setLoginError("Invalid email or password.");
@@ -58,7 +58,7 @@ export const LoginView: React.FC = () => {
       setIsLoading(false);
 
       if (response.ok && data) {
-        login(data.token, data.user);
+        login(data);
         navigate("/audio-player");
       } else if (response.status === 401) {
         setLoginError("The provided secret-key is invalid.");

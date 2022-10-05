@@ -24,7 +24,6 @@ import { AudioPlayerVolume } from "./AudioPlayerVolume";
 
 export const AudioPlayer: React.FC = () => {
   const {
-    token,
     queue,
     history,
     currentSong,
@@ -36,7 +35,6 @@ export const AudioPlayer: React.FC = () => {
     songLoadingProgression,
   } = useStore(
     (state) => ({
-      token: state.token,
       queue: state.queue,
       history: state.history,
       currentSong: state.currentSong,
@@ -58,7 +56,7 @@ export const AudioPlayer: React.FC = () => {
     audioManager.clean();
 
     audioManager
-      .loadSong(song, token!)
+      .loadSong(song)
       .then(() => loadSongSuccess())
       .catch((error) => {
         loadSongFailed();
@@ -70,7 +68,7 @@ export const AudioPlayer: React.FC = () => {
   const playPreviousSong = () => {
     const previousSong = history[0];
 
-    if (!token || isSongLoading || !previousSong) {
+    if (isSongLoading || !previousSong) {
       return;
     }
 
@@ -80,12 +78,7 @@ export const AudioPlayer: React.FC = () => {
   const playNextSong = () => {
     const nextSong = queue[0] as APISong | undefined;
 
-    if (
-      !token ||
-      !nextSong ||
-      isSongLoading ||
-      currentSong?.id === nextSong.id
-    ) {
+    if (!nextSong || isSongLoading || currentSong?.id === nextSong.id) {
       return;
     }
 
@@ -142,12 +135,10 @@ export const AudioPlayer: React.FC = () => {
   };
 
   useEffect(() => {
-    if (currentSong && token) {
-      getSongCover(currentSong.id, token)
+    if (currentSong) {
+      getSongCover(currentSong.id.toString())
         .then((blob) => {
           const url = URL.createObjectURL(blob);
-
-          console.log("[AudioPlayer] fetched cover:", url);
 
           // Revoke old cover URL before replacing it only when the new one is loaded.
           if (image) {
@@ -158,7 +149,7 @@ export const AudioPlayer: React.FC = () => {
         })
         .catch((error) => captureException(error));
     }
-  }, [currentSong, token]);
+  }, [currentSong]);
 
   // Mount events everytime component re-render to avoid stale variables.
   // It's a fix for the "stale closure" which captures a "snapshot" of the
@@ -246,8 +237,8 @@ export const AudioPlayer: React.FC = () => {
       <AudioPlayerTrackInfo
         song={currentSong}
         imageUrl={image}
-        artist={currentSong?.artist.name || "Not playing..."}
-        title={currentSong?.title || ""}
+        artist={currentSong?.artists[0].name || "Unknown"}
+        title={currentSong?.title || "Unknown"}
         songProgression={songLoadingProgression}
       />
 

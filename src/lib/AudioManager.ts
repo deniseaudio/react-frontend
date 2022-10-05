@@ -104,15 +104,14 @@ class AudioManager extends EventEmitter {
    * Load a song stream and start playing it once ready.
    *
    * @param song Song.
-   * @param token API authorization token.
    */
-  public async loadSong(song: APISong, token: string) {
+  public async loadSong(song: APISong) {
     this.clean();
 
     this.song = song;
     this.setAudioContext(new AudioContext());
 
-    const buffer = await this.fetchSongStream(song.id, token);
+    const buffer = await this.fetchSongStream(song.id);
     const audioBuffer = await this.decodeAudioBuffer(
       this.audioContext!,
       buffer
@@ -244,11 +243,10 @@ class AudioManager extends EventEmitter {
    * Fetch a song-stream and get information about the download progression.
    *
    * @param songId Song ID.
-   * @param token API authorization token.
    * @returns ArrayBuffer.
    */
-  private async fetchSongStream(songId: string, token: string) {
-    const response = await getSongStream(songId, token);
+  private async fetchSongStream(songId: number) {
+    const response = await getSongStream(songId.toString());
     const reader = response.body?.getReader();
     const contentLength = response.headers.get("Content-Length")!;
     // Store all chunks, because we cannot use `response.arrayBuffer()` as the

@@ -1,19 +1,12 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import shallow from "zustand/shallow";
 
 import { useStore } from "@/store/store";
 
 export const RequireAuth: React.FC = ({ children }) => {
-  const { token, user } = useStore(
-    (state) => ({
-      user: state.user,
-      token: state.token,
-    }),
-    shallow
-  );
+  const user = useStore((state) => state.user);
 
-  if (!token || !user) {
+  if (!user) {
     return <Navigate to="/" replace />;
   }
 

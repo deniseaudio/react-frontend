@@ -23,14 +23,15 @@ export const AudioPlayerTrackInfo: React.FC<AudioPlayerTrackInfoProps> = ({
   title,
   songProgression,
 }) => {
-  const token = useStore((state) => state.token);
   const user = useStore((state) => state.user);
   const likes = useStore((state) => state.likes);
   const updateLikes = useStore((state) => state.updateLikes);
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const isLiked = song ? likes.includes(song.id) : false;
+  const isLiked = song
+    ? likes.findIndex((like) => like.id === song.id) !== -1
+    : false;
 
   const loadingPercentage = useMemo(
     () =>
@@ -48,13 +49,13 @@ export const AudioPlayerTrackInfo: React.FC<AudioPlayerTrackInfoProps> = ({
   );
 
   const onSongLike = () => {
-    if (!isLoading && token && song && user && user.id) {
+    if (!isLoading && song && user && user.id) {
       setIsLoading(true);
 
-      postSongLike(user.id, song.id, token)
+      postSongLike(song.id.toString())
         .then(({ data }) => {
           setIsLoading(false);
-          return updateLikes(data.likes);
+          return updateLikes(data);
         })
         .catch((error) => {
           setIsLoading(false);

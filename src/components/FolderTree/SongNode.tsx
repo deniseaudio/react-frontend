@@ -21,7 +21,7 @@ export const SongNode: React.FC<SongNodeProps> = ({ song, directorySongs }) => {
    *
    * @param songId Song ID reference.
    */
-  const addSongsToQueue = (songId: string) => {
+  const addSongsToQueue = (songId: number) => {
     const currentSongIndex = directorySongs.findIndex((s) => s.id === songId);
     const songsToQueue = directorySongs.slice(currentSongIndex + 1);
     const noDuplicatesSongsToQueue = songsToQueue.filter(

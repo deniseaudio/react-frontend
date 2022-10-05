@@ -22,21 +22,15 @@ export const SongItem: React.FC<SongItemProps> = ({
   index,
   onLikeUpdate,
 }) => {
-  const token = useStore((state) => state.token);
   const user = useStore((state) => state.user);
   const likes = useStore((state) => state.likes);
   const updateLikes = useStore((state) => state.updateLikes);
 
-  const isLiked = likes.includes(song.id);
+  const isLiked = likes.findIndex((like) => like.id === song.id) !== -1;
 
   const [isLoading, setIsLoading] = useState(false);
 
   const playLikeItem = () => {
-    if (!token) {
-      captureException("No token at the time of playing a song.");
-      return;
-    }
-
     audioManager.emit(AudioManagerEvents.PREPARE_SONG, {
       song,
       initiator: SongInitiatorTypes.QUEUE,
@@ -44,16 +38,16 @@ export const SongItem: React.FC<SongItemProps> = ({
   };
 
   const onSongLike = () => {
-    if (!isLoading && user && user.id && token) {
+    if (!isLoading && user && user.id) {
       setIsLoading(true);
 
-      postSongLike(user.id, song.id, token)
+      postSongLike(song.id.toString())
         .then(({ data }) => {
           if (onLikeUpdate) {
             onLikeUpdate(song);
           }
 
-          updateLikes(data.likes);
+          updateLikes(data);
           return setIsLoading(false);
         })
         .catch((error) => {
@@ -81,13 +75,13 @@ export const SongItem: React.FC<SongItemProps> = ({
         </p>
 
         <p className="font-metropolis text-xs font-normal leading-snug text-neutral-400">
-          {song.artist.name}
+          {song.artists[0]?.name || "Unknown"}
         </p>
       </div>
 
       <div className="flex flex-col justify-center">
         <p className="overflow-hidden text-ellipsis font-metropolis text-sm font-medium leading-snug text-neutral-400">
-          {song.album.name}
+          {song.album?.name || "Unknown"}
         </p>
       </div>
 

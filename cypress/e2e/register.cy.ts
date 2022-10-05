@@ -13,7 +13,7 @@ describe("register view specs", () => {
   });
 
   it("can't create an account if secret-key is invalid", () => {
-    cy.intercept("/api/user/register", {
+    cy.intercept("/auth/signup", {
       statusCode: 401,
       body: {},
     });
@@ -30,7 +30,7 @@ describe("register view specs", () => {
   });
 
   it("can't create an account if email is already used", () => {
-    cy.intercept("/api/user/register", {
+    cy.intercept("/auth/signup", {
       statusCode: 409,
       body: {},
     });
@@ -47,7 +47,7 @@ describe("register view specs", () => {
   });
 
   it("can't create an account if an unexpected error happens", () => {
-    cy.intercept("/api/user/register", {
+    cy.intercept("/auth/signup", {
       statusCode: 400,
       body: {},
     });
@@ -64,7 +64,7 @@ describe("register view specs", () => {
   });
 
   it("can create an account if all the fields are filled", () => {
-    cy.intercept("/api/user/register", {
+    cy.intercept("/auth/signup", {
       statusCode: 200,
       fixture: "login.json",
     });

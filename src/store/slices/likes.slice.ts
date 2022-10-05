@@ -1,8 +1,9 @@
 import type { StoreSlice } from "../store";
+import type { APISong } from "../../interfaces/api.interfaces";
 
 export type LikeSlice = {
-  likes: string[];
-  updateLikes: (likes: string[]) => void;
+  likes: APISong[];
+  updateLikes: (likes: APISong[]) => void;
 };
 
 export const createLikeSlice: StoreSlice<LikeSlice> = (set) => ({

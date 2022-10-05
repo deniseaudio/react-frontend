@@ -3,6 +3,7 @@ import { CollectionIcon } from "@heroicons/react/solid";
 import { captureException } from "@sentry/react";
 
 import type {
+  APIChildrenDirectory,
   APIDirectory,
   APIRootDirectory,
 } from "@/interfaces/api.interfaces";
@@ -13,8 +14,8 @@ import { TreeNode } from "./TreeNode";
 
 export type FolderTreeProps = {
   rootDirectory: APIRootDirectory;
-  openedDirectories: string[];
-  setOpenedDirectories: (openedDirectories: string[]) => void;
+  openedDirectories: number[];
+  setOpenedDirectories: (openedDirectories: number[]) => void;
 };
 
 export const FolderTree: React.FC<FolderTreeProps> = ({
@@ -22,42 +23,38 @@ export const FolderTree: React.FC<FolderTreeProps> = ({
   openedDirectories,
   setOpenedDirectories,
 }) => {
-  const token = useStore((state) => state.token);
   const directories = useStore((state) => state.directories);
   const setDirectories = useStore((state) => state.updateDirectories);
 
   // Top-level directories are directories with no parent.
-  // They are the first folders relative to the root directory.
+  // They are the first folders relative to the root-directory, provided by
+  // the root-directories already fetched earlier.
   const [topLevelDirectory, setTopLevelDirectory] =
     useState<APIDirectory | null>(null);
 
-  const fetchDirectory = (parentDirectoryId: string, topLevel = false) => {
+  const fetchDirectory = (parentDirectoryId: number, topLevel = false) => {
     // Don't fetch directory if it has already been fetched or if it's not a
     // top-level directory.
     if (!topLevel && directories.some((dir) => dir.id === parentDirectoryId)) {
       return;
     }
 
-    if (token) {
-      getDirectoryContent(token, parentDirectoryId)
-        .then(({ response, data }) => {
-          if (response.ok && data.directory) {
-            // Top-level directories are not stored globally, as we don't need
-            // to cache them.
-            if (topLevel) {
-              setTopLevelDirectory(data.directory);
-            } else {
-              setDirectories([...directories, data.directory]);
-            }
+    getDirectoryContent(parentDirectoryId.toString())
+      .then(({ response, data }) => {
+        if (response.ok && data) {
+          if (topLevel) {
+            setTopLevelDirectory(data);
+          } else {
+            setDirectories([...directories, data]);
           }
+        }
 
-          return { response, data };
-        })
-        .catch((error) => captureException(error));
-    }
+        return { response, data };
+      })
+      .catch((error) => captureException(error));
   };
 
-  const toggleFolderState = (directoryId: string) => {
+  const toggleFolderState = (directoryId: number) => {
     if (!openedDirectories.includes(directoryId)) {
       setOpenedDirectories([...openedDirectories, directoryId]);
       fetchDirectory(directoryId);
@@ -69,7 +66,7 @@ export const FolderTree: React.FC<FolderTreeProps> = ({
   };
 
   const orderDirectory = (
-    directory: { id: string; name: string },
+    directory: APIChildrenDirectory,
     dirs: APIDirectory[]
   ) => {
     const orderedDirectory: OrderedDirectory = {
@@ -104,9 +101,7 @@ export const FolderTree: React.FC<FolderTreeProps> = ({
 
   // On mount, always fetch the top-level directory even if it's cached.
   useEffect(() => {
-    if (token) {
-      fetchDirectory(rootDirectory.id, true);
-    }
+    fetchDirectory(rootDirectory.id, true);
   }, []);
 
   return (

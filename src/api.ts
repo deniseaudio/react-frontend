@@ -1,7 +1,7 @@
 import type {
+  APIUser,
   APIDirectory,
   APIRootDirectory,
-  APIUser,
   APISong,
 } from "@/interfaces/api.interfaces";
 
@@ -12,17 +12,19 @@ const API_URL = import.meta.env.PROD
 const convertResponse = <T>(
   response: Response
 ): Promise<{ data: T; response: Response }> => {
-  return response.json().then((data: T) => ({ data, response }));
+  return response.json().then((data: { data: T; message?: string }) => ({
+    data: data.data,
+    response,
+  }));
 };
 
 export const postLogin = (email: string, password: string) => {
-  return fetch(`${API_URL}/api/user/login`, {
+  return fetch(`${API_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
-  }).then((response) =>
-    convertResponse<{ token: string; user: APIUser }>(response)
-  );
+    credentials: "include",
+  }).then((response) => convertResponse<APIUser>(response));
 };
 
 export const postRegister = (
@@ -31,69 +33,65 @@ export const postRegister = (
   password: string,
   secretKey: string
 ) => {
-  return fetch(`${API_URL}/api/user/register`, {
+  return fetch(`${API_URL}/auth/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, email, password, secretKey }),
-  }).then((response) =>
-    convertResponse<{ token: string; user: APIUser }>(response)
-  );
+    credentials: "include",
+  }).then((response) => convertResponse<APIUser>(response));
 };
 
-export const getRootDirectories = (token: string) => {
-  return fetch(`${API_URL}/api/app/root-directories`, {
+export const getRootDirectories = () => {
+  return fetch(`${API_URL}/folder-tree/root-directories`, {
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
     },
-  }).then((response) =>
-    convertResponse<{ directories: APIRootDirectory[] }>(response)
-  );
+  }).then((response) => convertResponse<APIRootDirectory[]>(response));
 };
 
-export const getDirectoryContent = (token: string, id: string) => {
-  return fetch(`${API_URL}/api/app/directory-content?directoryId=${id}`, {
+export const getDirectoryContent = (id: string) => {
+  return fetch(`${API_URL}/folder-tree/directory?id=${id}`, {
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
     },
-  }).then((response) => convertResponse<{ directory: APIDirectory }>(response));
+  }).then((response) => convertResponse<APIDirectory>(response));
 };
 
-export const getSongStream = (songId: string, token: string) => {
-  return fetch(`${API_URL}/api/app/stream?songId=${songId}`, {
+export const getSongStream = (songId: string) => {
+  return fetch(`${API_URL}/songs/stream?id=${songId}`, {
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
     },
   });
 };
 
-export const getSongCover = (songId: string, token: string) => {
-  return fetch(`${API_URL}/api/app/cover?songId=${songId}`, {
+export const getSongCover = (songId: string) => {
+  return fetch(`${API_URL}/songs/cover?id=${songId}`, {
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
     },
   }).then((response) => response.blob());
 };
 
-export const postSongLike = (userId: string, songId: string, token: string) => {
-  return fetch(`${API_URL}/api/user/like`, {
-    method: "POST",
+export const getSongsLiked = () => {
+  return fetch(`${API_URL}/user/songs-liked`, {
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ userId, songId }),
-  }).then((response) => convertResponse<{ likes: string[] }>(response));
+  }).then((response) => convertResponse<APISong[]>(response));
 };
 
-export const getLikesAsSongs = (userId: string, token: string) => {
-  return fetch(`${API_URL}/api/user/likes-as-songs?userId=${userId}`, {
+export const postSongLike = (songId: string) => {
+  return fetch(`${API_URL}/user/toggle-song-like?id=${songId}`, {
+    method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
     },
   }).then((response) => convertResponse<APISong[]>(response));
 };

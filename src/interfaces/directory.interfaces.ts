@@ -1,7 +1,7 @@
 import type { APISong } from "./api.interfaces";
 
 export type OrderedDirectory = {
-  id: string;
+  id: number;
   name: string;
   songs: APISong[];
   children: OrderedDirectory[];

@@ -1,50 +1,49 @@
 export type APIUser = {
-  id: string;
+  id: number;
   username: string;
   email: string;
-  likes: string[];
+  likes: APISong[];
 };
 
-export type APIArtist = {
-  createdAt: string;
-  id: string;
+export type APIChildrenDirectory = {
+  id: number;
+  parentId: number;
   name: string;
-  updatedAt: string;
-};
-
-export type APIAlbum = {
-  createdAt: string;
-  id: string;
-  name: string;
-  updatedAt: string;
-};
-
-export type APISong = {
-  album: APIAlbum;
-  albumId: string;
-  artist: APIArtist;
-  artistId: string;
-  createdAt: string;
-  directoryId: string;
-  id: string;
-  length: number;
-  title: string;
-  updatedAt: string;
-  filename: string;
-  codec: string;
 };
 
 export type APIRootDirectory = {
-  id: string;
+  id: number;
   name: string;
+  root: true;
+  children: APIChildrenDirectory[];
 };
 
 export type APIDirectory = {
-  id: string;
+  id: number;
+  parentId: number;
   name: string;
-  children: {
-    id: string;
-    name: string;
-  }[];
+  root: boolean;
+  children: APIChildrenDirectory[];
   songs: APISong[];
+};
+
+export type APIArtist = {
+  id: number;
+  name: string;
+};
+
+export type APIAlbum = {
+  id: number;
+  name: string;
+};
+
+export type APISong = {
+  id: number;
+  directoryId: number;
+  title: string;
+  filename: string;
+  length: number;
+  codec: string;
+  artists: APIArtist[];
+  album: APIAlbum | null;
 };

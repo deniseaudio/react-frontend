@@ -7,10 +7,10 @@ import type { StoreSlice } from "../store";
 export type DirectoriesSlice = {
   rootDirectories: APIRootDirectory[];
   directories: APIDirectory[];
-  openedDirectories: string[];
+  openedDirectories: number[];
   updateRootDirectories: (rootDirectories: APIRootDirectory[]) => void;
   updateDirectories: (directories: APIDirectory[]) => void;
-  updateOpenedDirectories: (openedDirectories: string[]) => void;
+  updateOpenedDirectories: (openedDirectories: number[]) => void;
 };
 
 export const createDirectoriesSlice: StoreSlice<DirectoriesSlice> = (set) => ({

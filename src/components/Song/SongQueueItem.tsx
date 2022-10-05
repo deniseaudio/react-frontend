@@ -20,7 +20,6 @@ export const SongQueueItem: React.FC<SongQueueItemProps> = ({
   song,
   index,
 }) => {
-  const token = useStore((state) => state.token);
   const user = useStore((state) => state.user);
   const likes = useStore((state) => state.likes);
   const updateLikes = useStore((state) => state.updateLikes);
@@ -30,14 +29,9 @@ export const SongQueueItem: React.FC<SongQueueItemProps> = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const isCurrentSong = index === 0;
-  const isLiked = likes.includes(song.id);
+  const isLiked = likes.findIndex((like) => like.id === song.id) !== -1;
 
   const playQueueItem = () => {
-    if (!token) {
-      captureException("No token at the time of playing a song.");
-      return;
-    }
-
     const queueSong = queue[index - 1];
 
     updateQueue([...queue.slice(index - 1)]);
@@ -52,13 +46,13 @@ export const SongQueueItem: React.FC<SongQueueItemProps> = ({
   };
 
   const onSongLike = () => {
-    if (!isLoading && token && user && user.id) {
+    if (!isLoading && user && user.id) {
       setIsLoading(true);
 
-      postSongLike(user.id, song.id, token)
+      postSongLike(song.id.toString())
         .then(({ data }) => {
           setIsLoading(false);
-          return updateLikes(data.likes);
+          return updateLikes(data);
         })
         .catch((error) => {
           setIsLoading(false);
@@ -92,13 +86,13 @@ export const SongQueueItem: React.FC<SongQueueItemProps> = ({
         </p>
 
         <p className="font-metropolis text-xs font-normal leading-snug text-neutral-400">
-          {song.artist.name}
+          {song.artists[0]?.name || "Unknown"}
         </p>
       </div>
 
       <div className="flex flex-col justify-center">
         <p className="overflow-hidden text-ellipsis font-metropolis text-sm font-medium leading-snug text-neutral-400">
-          {song.album.name}
+          {song.album?.name || "Unknown"}
         </p>
       </div>
 

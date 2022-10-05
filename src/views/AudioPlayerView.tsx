@@ -6,7 +6,6 @@ import { useStore } from "@/store/store";
 import { FolderTree } from "@/components/FolderTree/FolderTree";
 
 export const AudioPlayerView: React.FC = () => {
-  const token = useStore((state) => state.token);
   const rootDirectories = useStore((state) => state.rootDirectories);
   const openedDirectories = useStore((state) => state.openedDirectories);
   const setRootDirectories = useStore((state) => state.updateRootDirectories);
@@ -16,18 +15,18 @@ export const AudioPlayerView: React.FC = () => {
 
   // Fetch root directories on mount.
   useEffect(() => {
-    if (token && rootDirectories.length === 0) {
-      getRootDirectories(token)
+    if (rootDirectories.length === 0) {
+      getRootDirectories()
         .then(({ response, data }) => {
-          if (response.ok && data.directories) {
-            setRootDirectories([...data.directories]);
+          if (response.ok && data.length > 0) {
+            setRootDirectories([...data]);
           }
 
           return { response, data };
         })
         .catch((error) => captureException(error));
     }
-  }, [token, rootDirectories, setRootDirectories]);
+  }, [rootDirectories, setRootDirectories]);
 
   return (
     <>

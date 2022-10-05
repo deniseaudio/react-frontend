@@ -39,8 +39,8 @@ export const setupMediaSessionMetadata = (song: APISong, imageSrc: string) => {
   if (audioTag && navigator.mediaSession) {
     navigator.mediaSession.metadata = new MediaMetadata({
       title: song.title,
-      artist: song.artist.name,
-      album: song.album.name,
+      artist: song.artists[0]?.name || "Unknown",
+      album: song.album?.name || "Unknown",
       artwork: [{ src: imageSrc, type: "image/png" }],
     });
 

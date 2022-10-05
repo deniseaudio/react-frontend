@@ -6,8 +6,8 @@ import { SongNode } from "./SongNode";
 
 export type TreeNodeProps = {
   directory: OrderedDirectory;
-  foldersOpened: string[];
-  toggleFolderState: (directoryId: string) => void;
+  foldersOpened: number[];
+  toggleFolderState: (directoryId: number) => void;
 };
 
 export const TreeNode: React.FC<TreeNodeProps> = ({

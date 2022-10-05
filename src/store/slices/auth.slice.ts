@@ -3,18 +3,15 @@ import type { StoreSlice } from "../store";
 
 export type AuthSlice = {
   user: APIUser | null;
-  token: string | null;
-  login: (token: string, user: APIUser) => void;
+  login: (user: APIUser) => void;
   logout: () => void;
 };
 
 export const createAuthSlice: StoreSlice<AuthSlice> = (set) => ({
   user: null,
-  token: null,
-  login: (token, user) => set(() => ({ token, user, likes: user.likes })),
+  login: (user) => set(() => ({ user, likes: [...user.likes] })),
   logout: () =>
     set(() => ({
-      token: null,
       user: null,
       queue: [],
       currentSong: null,

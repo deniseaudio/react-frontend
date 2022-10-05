@@ -40,7 +40,7 @@ describe("login view specs", () => {
   });
 
   it("can't login with invalid credentials", () => {
-    cy.intercept("/api/user/login", {
+    cy.intercept("/auth/login", {
       statusCode: 404,
       body: {},
     });
@@ -54,7 +54,7 @@ describe("login view specs", () => {
   });
 
   it("can login with valid credentials", () => {
-    cy.intercept("/api/user/login", {
+    cy.intercept("/auth/login", {
       statusCode: 200,
       fixture: "login.json",
     });
