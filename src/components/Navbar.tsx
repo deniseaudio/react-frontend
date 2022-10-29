@@ -23,11 +23,10 @@ export const Navbar: React.FC = () => {
         <Button
           type="button"
           variant="secondary"
-          className="inline-flex w-40 items-center justify-center"
+          className="inline-flex w-auto items-center justify-center"
           onClick={handleClickLogout}
         >
-          <LogoutIcon className="mr-3 h-5 w-auto" />
-          Logout
+          <LogoutIcon className="h-5 w-auto" />
         </Button>
       </div>
     </nav>
