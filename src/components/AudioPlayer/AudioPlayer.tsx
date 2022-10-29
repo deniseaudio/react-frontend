@@ -138,14 +138,18 @@ export const AudioPlayer: React.FC = () => {
     if (currentSong) {
       getSongCover(currentSong.id.toString())
         .then((blob) => {
-          const url = URL.createObjectURL(blob);
+          if (blob.type === "image/jpeg") {
+            const url = URL.createObjectURL(blob);
 
-          // Revoke old cover URL before replacing it only when the new one is loaded.
-          if (image) {
-            URL.revokeObjectURL(image);
+            // Revoke old cover URL before replacing it only when the new one is loaded.
+            if (image) {
+              URL.revokeObjectURL(image);
+            }
+
+            return setImage(url);
           }
 
-          return setImage(url);
+          return setImage("");
         })
         .catch((error) => captureException(error));
     }
