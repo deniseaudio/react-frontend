@@ -1,4 +1,5 @@
 import type {
+  UpdateUserSettings,
   APIUser,
   APIDirectory,
   APIRootDirectory,
@@ -94,4 +95,15 @@ export const postSongLike = (songId: string) => {
       "Content-Type": "application/json",
     },
   }).then((response) => convertResponse<APISong[]>(response));
+};
+
+export const postUserSettings = (payload: UpdateUserSettings) => {
+  return fetch(`${API_URL}/user/update-options`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
 };

@@ -1,8 +1,15 @@
+export type UpdateUserSettings = {
+  lowBandwidthEnabled: boolean;
+  lowBandwidthBitrate: number;
+};
+
 export type APIUser = {
   id: number;
   username: string;
   email: string;
   likes: APISong[];
+  lowBandwidthBitrate: number;
+  lowBandwidthEnabled: boolean;
 };
 
 export type APIChildrenDirectory = {
