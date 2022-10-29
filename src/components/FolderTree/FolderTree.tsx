@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { CollectionIcon } from "@heroicons/react/solid";
+import { FolderOpenIcon } from "@heroicons/react/outline";
 import { captureException } from "@sentry/react";
 
 import type {
@@ -31,6 +32,10 @@ export const FolderTree: React.FC<FolderTreeProps> = ({
   // the root-directories already fetched earlier.
   const [topLevelDirectory, setTopLevelDirectory] =
     useState<APIDirectory | null>(null);
+
+  const handleCollaspeAll = () => {
+    setOpenedDirectories([]);
+  };
 
   const fetchDirectory = (parentDirectoryId: number, topLevel = false) => {
     // Don't fetch directory if it has already been fetched or if it's not a
@@ -106,9 +111,18 @@ export const FolderTree: React.FC<FolderTreeProps> = ({
 
   return (
     <>
-      <div className="flex items-center text-neutral-200">
+      <div className="relative flex items-center text-neutral-200">
         <CollectionIcon className="mr-2 h-auto w-4" />
+
         <p className="font-semibold">{rootDirectory.name} (root)</p>
+
+        <button
+          type="button"
+          className="absolute top-0 right-0 inline-flex items-center"
+          onClick={handleCollaspeAll}
+        >
+          <FolderOpenIcon className="h-4 w-4" />
+        </button>
       </div>
 
       <div className="pl-6">
