@@ -6,7 +6,12 @@ import { SongQueueItem } from "@/components/Song/SongQueueItem";
 
 export const QueueView: React.FC = () => {
   const queue = useStore((state) => state.queue);
+  const updateQueue = useStore((state) => state.updateQueue);
   const currentSong = useStore((state) => state.currentSong);
+
+  const handleClearQueue = () => {
+    updateQueue([]);
+  };
 
   return (
     <>
@@ -25,9 +30,19 @@ export const QueueView: React.FC = () => {
         {currentSong ? <SongQueueItem song={currentSong} index={0} /> : null}
 
         {queue.length > 0 ? (
-          <p className="mt-8 mb-4 font-metropolis text-lg font-medium leading-tight text-neutral-400">
-            Next queued
-          </p>
+          <div className="mt-8 mb-4 flex items-center justify-between">
+            <p className="font-metropolis text-lg font-medium leading-tight text-neutral-400">
+              Next queued
+            </p>
+
+            <button
+              type="button"
+              className="inline-flex rounded-2xl border border-neutral-500 px-4 py-1 text-sm font-semibold leading-relaxed text-neutral-50"
+              onClick={handleClearQueue}
+            >
+              Clear queue
+            </button>
+          </div>
         ) : null}
 
         <div className="flex flex-col">
