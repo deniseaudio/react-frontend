@@ -46,7 +46,7 @@ export const Sidebar: React.FC = () => {
   ];
 
   return (
-    <div className="fixed top-0 left-0 bottom-0 z-10 w-64 border-r border-neutral-800 bg-neutral-900">
+    <div className="fixed top-0 left-0 bottom-0 z-20 w-64 border-r border-neutral-800 bg-neutral-900">
       <div className="flex h-20 w-full items-center justify-center border-b border-neutral-800">
         <LogoDeniseAudio />
       </div>
